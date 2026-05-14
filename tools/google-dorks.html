@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Dorks — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html" class="active">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🔍</div>
+    <div>
+      <div class="tool-page-title">Google Dorks</div>
+      <div class="tool-page-subtitle">Opérateurs de recherche avancés pour l'OSINT et la découverte d'informations sensibles</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-purple">OSINT</span>
+        <span class="badge badge-blue">Recon</span>
+        <span class="badge badge-green">GHDB</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info">
+    <span class="info-box-icon">ℹ️</span>
+    <div class="info-box-text">Les Google Dorks exploitent les opérateurs de recherche avancés de Google pour trouver des informations publiquement accessibles. Tout ce qui est indexé est légalement accessible en lecture.</div>
+  </div>
+
+  <!-- GÉNÉRATEUR -->
+  <h2 class="section-h">⚙️ Générateur de Dork</h2>
+  <div class="builder-form" id="dorksBuilder">
+    <div class="builder-grid">
+      <div class="form-group">
+        <label>site: (domaine cible)</label>
+        <input type="text" id="dork-site" class="form-control" placeholder="exemple.com">
+      </div>
+      <div class="form-group">
+        <label>inurl: (dans l'URL)</label>
+        <input type="text" id="dork-inurl" class="form-control" placeholder="admin, login, config">
+      </div>
+      <div class="form-group">
+        <label>intitle: (dans le titre)</label>
+        <input type="text" id="dork-intitle" class="form-control" placeholder="index of, dashboard">
+      </div>
+      <div class="form-group">
+        <label>intext: (dans le texte)</label>
+        <input type="text" id="dork-intext" class="form-control" placeholder="password, username">
+      </div>
+      <div class="form-group">
+        <label>filetype:</label>
+        <select id="dork-filetype" class="form-control">
+          <option value="">--</option>
+          <option value="pdf">pdf</option>
+          <option value="xls">xls / xlsx</option>
+          <option value="doc">doc / docx</option>
+          <option value="sql">sql</option>
+          <option value="env">env</option>
+          <option value="log">log</option>
+          <option value="bak">bak</option>
+          <option value="xml">xml</option>
+          <option value="json">json</option>
+          <option value="php">php</option>
+          <option value="txt">txt</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>ext: (extension)</label>
+        <input type="text" id="dork-ext" class="form-control" placeholder="conf, cfg, ini">
+      </div>
+      <div class="form-group">
+        <label>Exclure (-"texte")</label>
+        <input type="text" id="dork-exclude" class="form-control" placeholder="exemple">
+      </div>
+    </div>
+    <div class="builder-output" style="margin-bottom:12px;">
+      <span id="dork-output">site:exemple.com</span>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <button class="builder-copy-btn" id="dork-copy-text" style="background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border);">⎘ Copier</button>
+      <button class="builder-copy-btn" id="dork-copy">🔍 Ouvrir dans Google</button>
+    </div>
+  </div>
+
+  <!-- OPÉRATEURS -->
+  <h2 class="section-h">📖 Opérateurs de base</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Syntaxe des opérateurs</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">Opérateur          Description</span>
+<span class="cmd-success">site:</span>domaine.com   Limiter la recherche à un domaine
+<span class="cmd-success">inurl:</span>mot          Mot dans l'URL
+<span class="cmd-success">intitle:</span>mot        Mot dans le titre de la page
+<span class="cmd-success">intext:</span>mot         Mot dans le contenu
+<span class="cmd-success">filetype:</span>pdf       Type de fichier spécifique
+<span class="cmd-success">ext:</span>sql            Extension de fichier
+<span class="cmd-success">cache:</span>url          Version en cache
+<span class="cmd-success">link:</span>url           Pages qui pointent vers cette URL
+<span class="cmd-success">related:</span>url        Sites similaires
+<span class="cmd-success">"texte exact"</span>       Recherche de phrase exacte
+<span class="cmd-success">-mot</span>               Exclure un mot
+<span class="cmd-success">mot1 OR mot2</span>       L'un ou l'autre
+<span class="cmd-success">*</span>                  Wildcard</code></pre>
+  </div>
+
+  <!-- DORKS PRÊTS À L'EMPLOI -->
+  <h2 class="section-h">🎯 Dorks prêts à l'emploi</h2>
+  <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">Cliquez sur un dork pour le copier. Remplacez <code>target.com</code> par votre cible.</p>
+
+  <div class="dorks-grid">
+    <div>
+      <div class="dork-category">🔐 Authentification & Credentials</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:login</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:admin</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:wp-admin</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"login" intext:"username"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intext:"password" filetype:log</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com filetype:env "DB_PASSWORD"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">intext:"password" filetype:xls site:target.com</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com ext:sql "INSERT INTO" "password"</span><span class="dork-copy">⎘</span></div>
+      </div>
+
+      <div class="dork-category" style="margin-top:20px;">📁 Fichiers exposés</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"index of"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"index of" "parent directory"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com filetype:bak</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com filetype:sql</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com filetype:conf OR filetype:cfg</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com ext:log</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com filetype:xml inurl:config</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:".git" intitle:"index of"</span><span class="dork-copy">⎘</span></div>
+      </div>
+
+      <div class="dork-category" style="margin-top:20px;">🛢️ Bases de données</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:phpmyadmin</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">intitle:"phpMyAdmin" intext:"Welcome to phpMyAdmin"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:adminer.php</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com ext:sql "-- MySQL dump"</span><span class="dork-copy">⎘</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="dork-category">⚙️ Technologies & Configurations</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:wp-content</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com "Powered by" inurl:cms</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intext:"robots.txt" filetype:txt</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com ext:php inurl:shell</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:".env"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:web.config</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com "Stack trace" "exception"</span><span class="dork-copy">⎘</span></div>
+      </div>
+
+      <div class="dork-category" style="margin-top:20px;">📧 OSINT Emails & Sous-domaines</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com "@target.com"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:*.target.com -www</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:linkedin.com/in "target.com"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:pastebin.com "target.com"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:github.com "target.com" password</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:trello.com "target.com"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:s3.amazonaws.com "target"</span><span class="dork-copy">⎘</span></div>
+      </div>
+
+      <div class="dork-category" style="margin-top:20px;">🔓 Panneaux d'administration</div>
+      <div class="dorks-list">
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"admin panel"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:controlpanel</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">intitle:"Dashboard" inurl:admin site:target.com</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:cPanel</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"Kibana"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com intitle:"Grafana"</span><span class="dork-copy">⎘</span></div>
+        <div class="dork-item"><span class="dork-text">site:target.com inurl:jenkins</span><span class="dork-copy">⎘</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">🌐 Dorking sur d'autres moteurs</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Bing / Shodan / GitHub</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Bing (souvent moins filtré que Google)</span>
+site:target.com filetype:sql
+ip:192.168.1.1
+
+<span class="cmd-comment"># Shodan (pour les services exposés)</span>
+hostname:target.com
+org:"Target Company"
+ssl:"target.com"
+http.title:"Dashboard"
+port:8080 country:FR
+vuln:CVE-2021-44228    <span class="cmd-comment"># Log4Shell</span>
+product:nginx version:1.14
+
+<span class="cmd-comment"># GitHub Dorks (secrets exposés dans le code)</span>
+org:targetcompany password
+org:targetcompany api_key
+filename:.env DB_PASSWORD
+filename:config.php password
+extension:pem private
+filename:id_rsa
+"target.com" "secret_key"
+"target.com" "AWS_SECRET"</code></pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text"><strong>GHDB :</strong> La Google Hacking Database (Exploit-DB) contient des milliers de dorks catégorisés. Consultez <a href="https://www.exploit-db.com/google-hacking-database" target="_blank">exploit-db.com/google-hacking-database</a> pour les dernières entrées.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

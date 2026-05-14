@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikto — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🔎</div>
+    <div>
+      <div class="tool-page-title">Nikto</div>
+      <div class="tool-page-subtitle">Scanner de vulnérabilités web — Fichiers dangereux, mauvaises configs, versions obsolètes</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-blue">Web</span>
+        <span class="badge badge-orange">Scanner</span>
+        <span class="badge badge-red">CVE</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali / Debian / Ubuntu</span>
+sudo apt install nikto
+
+<span class="cmd-comment"># Depuis GitHub</span>
+git clone https://github.com/sullo/nikto.git
+cd nikto/program && perl nikto.pl -h
+
+<span class="cmd-comment"># Mettre à jour les plugins</span>
+nikto -update</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Cheatsheet Nikto</h2>
+
+  <h3 class="sub-h">Scans de base</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Commandes essentielles</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Scan de base</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span>
+
+<span class="cmd-comment"># Sur HTTPS</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">https://target.com</span> <span class="cmd-flag">-ssl</span>
+
+<span class="cmd-comment"># Port personnalisé</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-p 8080</span>
+
+<span class="cmd-comment"># Scan HTTPS sur port 443</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-p 443 -ssl</span>
+
+<span class="cmd-comment"># Avec authentification basique</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-id</span> <span class="cmd-value">admin:password</span>
+
+<span class="cmd-comment"># Avec cookie de session</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-cookies</span> <span class="cmd-string">"PHPSESSID=abc123"</span>
+
+<span class="cmd-comment"># Scan de plusieurs hôtes (fichier)</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">targets.txt</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Sortie et rapports</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Formats de sortie</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Rapport HTML</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-o rapport.html -Format htm</span>
+
+<span class="cmd-comment"># Rapport XML</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-o rapport.xml -Format xml</span>
+
+<span class="cmd-comment"># Rapport CSV</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-o rapport.csv -Format csv</span>
+
+<span class="cmd-comment"># Texte simple</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-o rapport.txt</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Options avancées</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Tuning et évasion</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Via proxy Burp Suite</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-useproxy http://127.0.0.1:8080</span>
+
+<span class="cmd-comment"># Tuning (tests spécifiques)</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning 1</span>   <span class="cmd-comment"># Fichiers intéressants</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning 2</span>   <span class="cmd-comment"># Mauvaises configs</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning 3</span>   <span class="cmd-comment"># Divulgation d'infos</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning 4</span>   <span class="cmd-comment"># Injection (XSS/HTML)</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning 9</span>   <span class="cmd-comment"># SQL injection</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning x</span>   <span class="cmd-comment"># Tout sauf DoS</span>
+
+<span class="cmd-comment"># User-Agent personnalisé</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-useragent</span> <span class="cmd-string">"Mozilla/5.0"</span>
+
+<span class="cmd-comment"># Ignorer les redirections</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-nofollow</span>
+
+<span class="cmd-comment"># Timeout personnalisé</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-timeout 10</span>
+
+<span class="cmd-comment"># Combinaison complète</span>
+nikto <span class="cmd-flag">-h</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-Tuning x -o scan.html -Format htm -ssl -useproxy http://127.0.0.1:8080</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🔍 Ce que Nikto détecte</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Types de vulnérabilités</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-success">✓</span> Fichiers et programmes potentiellement dangereux
+<span class="cmd-success">✓</span> Versions de serveur obsolètes (Apache, Nginx, IIS)
+<span class="cmd-success">✓</span> Configurations serveur incorrectes
+<span class="cmd-success">✓</span> Headers de sécurité manquants (CSP, HSTS, X-Frame-Options)
+<span class="cmd-success">✓</span> Répertoires sensibles (admin/, backup/, config/)
+<span class="cmd-success">✓</span> Fichiers de sauvegarde (.bak, ~, .old)
+<span class="cmd-success">✓</span> Pages d'erreur avec informations de debug
+<span class="cmd-success">✓</span> Formulaires sans protection CSRF
+<span class="cmd-success">✓</span> Injection XSS basique
+<span class="cmd-success">✓</span> Injection SQL basique
+<span class="cmd-success">✓</span> Divulgation d'informations via headers HTTP
+<span class="cmd-success">✓</span> Méthodes HTTP dangereuses (PUT, DELETE, TRACE)
+<span class="cmd-success">✓</span> Fichiers robots.txt et sitemap.xml
+<span class="cmd-success">✓</span> Certificats SSL/TLS expirés ou mal configurés
+<span class="cmd-success">✓</span> PHPInfo() accessible
+<span class="cmd-success">✓</span> Répertoires .git, .svn exposés</code></pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text"><strong>Conseil :</strong> Nikto est bruyant (non-furtif). Il génère beaucoup de trafic et sera détecté par la plupart des IDS/WAF. Utilisez-le en dernier recours ou après avoir évalué les risques de détection.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

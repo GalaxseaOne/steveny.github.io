@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html" class="active">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🕵️</div>
+    <div>
+      <div class="tool-page-title">OSINT Tools</div>
+      <div class="tool-page-subtitle">theHarvester, Recon-ng, Maltego, Amass — Reconnaissance passive et active</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-purple">OSINT</span>
+        <span class="badge badge-blue">Reconnaissance</span>
+        <span class="badge badge-green">Passive</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEHARVESTER -->
+  <h2 class="section-h">🌾 theHarvester</h2>
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text">theHarvester collecte emails, noms, sous-domaines, IPs et URLs depuis des sources publiques (moteurs de recherche, Shodan, LinkedIn, etc.).</div>
+  </div>
+
+  <div class="code-block" style="margin-bottom:16px;">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali Linux (préinstallé)</span>
+theHarvester --help
+
+<span class="cmd-comment"># Depuis GitHub</span>
+git clone https://github.com/laramies/theHarvester.git
+cd theHarvester && pip3 install -r requirements/base.txt</code></pre>
+  </div>
+
+  <!-- THEHARVESTER BUILDER -->
+  <h3 class="sub-h">⚙️ Générateur theHarvester</h3>
+  <div class="builder-form" id="harvesterBuilder">
+    <div class="builder-grid">
+      <div class="form-group">
+        <label>Domaine cible</label>
+        <input type="text" id="harv-domain" class="form-control" placeholder="target.com" value="target.com">
+      </div>
+      <div class="form-group">
+        <label>Source de données (-b)</label>
+        <select id="harv-source" class="form-control">
+          <option value="google">google</option>
+          <option value="bing">bing</option>
+          <option value="yahoo">yahoo</option>
+          <option value="linkedin">linkedin</option>
+          <option value="shodan">shodan</option>
+          <option value="hunter">hunter.io</option>
+          <option value="dnsx">dnsx</option>
+          <option value="virustotal">virustotal</option>
+          <option value="all">all (toutes les sources)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Limite de résultats</label>
+        <input type="text" id="harv-limit" class="form-control" placeholder="100" value="100">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Options</label>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" value="-f rapport"> -f (rapport HTML/XML)</label>
+        <label class="checkbox-item"><input type="checkbox" value="-v"> -v (verbose)</label>
+        <label class="checkbox-item"><input type="checkbox" value="-s"> -s (Shodan intégration)</label>
+      </div>
+    </div>
+    <div class="builder-output">
+      <span id="harvester-output">theHarvester -d target.com -b google -l 100</span>
+      <button class="builder-copy-btn" id="harvester-copy">⎘ Copier</button>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">theHarvester — Commandes</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Recherche de base</span>
+theHarvester <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-b</span> <span class="cmd-value">google</span>
+
+<span class="cmd-comment"># Toutes les sources</span>
+theHarvester <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-b all</span>
+
+<span class="cmd-comment"># Avec limite et sortie HTML</span>
+theHarvester <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-b google -l 500 -f</span> <span class="cmd-value">rapport_target</span>
+
+<span class="cmd-comment"># Intégration Shodan (clé API requise)</span>
+theHarvester <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-b shodan -s</span>
+
+<span class="cmd-comment"># Sources utiles :</span>
+<span class="cmd-success">google</span>      — Emails, sous-domaines, URLs
+<span class="cmd-success">bing</span>        — Emails, sous-domaines
+<span class="cmd-success">linkedin</span>    — Noms d'employés
+<span class="cmd-success">shodan</span>      — IPs et services
+<span class="cmd-success">hunter</span>      — Emails professionnels
+<span class="cmd-success">virustotal</span>  — Sous-domaines
+<span class="cmd-success">dnsx</span>        — Résolution DNS</code></pre>
+  </div>
+
+  <!-- AMASS -->
+  <h2 class="section-h">🌐 Amass — Sous-domaines</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Amass</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install amass
+go install github.com/owasp-amass/amass/v4/...@master
+
+<span class="cmd-comment"># Énumération passive (sans contact direct)</span>
+amass enum <span class="cmd-flag">-passive -d</span> <span class="cmd-value">target.com</span>
+
+<span class="cmd-comment"># Énumération active</span>
+amass enum <span class="cmd-flag">-active -d</span> <span class="cmd-value">target.com</span>
+
+<span class="cmd-comment"># Avec sortie dans un fichier</span>
+amass enum <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-o</span> <span class="cmd-value">subdomains.txt</span>
+
+<span class="cmd-comment"># Résolution DNS des sous-domaines trouvés</span>
+amass enum <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-ip -o</span> <span class="cmd-value">subdomains_ip.txt</span>
+
+<span class="cmd-comment"># Visualisation graphique</span>
+amass viz <span class="cmd-flag">-d3 -d</span> <span class="cmd-value">target.com</span></code></pre>
+  </div>
+
+  <!-- DNS ENUM -->
+  <h2 class="section-h">🔎 Énumération DNS</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">DNS Recon & Brute Force</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Informations DNS de base</span>
+nslookup <span class="cmd-value">target.com</span>
+dig <span class="cmd-value">target.com</span> ANY
+host <span class="cmd-value">target.com</span>
+
+<span class="cmd-comment"># Tentative de zone transfer (AXFR)</span>
+dig <span class="cmd-flag">@ns1.target.com</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">AXFR</span>
+host <span class="cmd-flag">-t axfr</span> <span class="cmd-value">target.com ns1.target.com</span>
+
+<span class="cmd-comment"># dnsrecon — énumération complète</span>
+dnsrecon <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span>
+dnsrecon <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-t axfr</span>
+dnsrecon <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-t brt -D</span> <span class="cmd-value">/usr/share/dnsrecon/namelist.txt</span>
+
+<span class="cmd-comment"># dnsx — résolution en masse</span>
+cat subdomains.txt | dnsx <span class="cmd-flag">-a -resp</span>
+
+<span class="cmd-comment"># Subfinder (rapide)</span>
+subfinder <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-o</span> <span class="cmd-value">subs.txt</span>
+subfinder <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-all -silent</span>
+
+<span class="cmd-comment"># Trouver les enregistrements MX (email)</span>
+dig <span class="cmd-value">target.com</span> MX
+
+<span class="cmd-comment"># SPF / DKIM / DMARC</span>
+dig <span class="cmd-value">target.com</span> TXT
+dig <span class="cmd-flag">_dmarc.</span><span class="cmd-value">target.com</span> TXT</code></pre>
+  </div>
+
+  <!-- WHOIS & IP -->
+  <h2 class="section-h">🌍 WHOIS & IP Lookup</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">WHOIS / IP / ASN</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># WHOIS d'un domaine</span>
+whois <span class="cmd-value">target.com</span>
+whois <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># ASN lookup (plages d'IP d'une entreprise)</span>
+whois <span class="cmd-flag">-h whois.cymru.com</span> <span class="cmd-string">" -v 8.8.8.8"</span>
+
+<span class="cmd-comment"># Outils en ligne équivalents :</span>
+<span class="cmd-success">https://who.is</span>
+<span class="cmd-success">https://bgp.he.net</span>           — ASN, BGP, plages IP
+<span class="cmd-success">https://www.shodan.io</span>        — Devices exposés
+<span class="cmd-success">https://censys.io</span>           — Certificats, ports
+<span class="cmd-success">https://crt.sh</span>              — Certificats SSL (sous-domaines)
+<span class="cmd-success">https://dnsdumpster.com</span>     — DNS records graphiques
+<span class="cmd-success">https://securitytrails.com</span>  — Historique DNS, IP</code></pre>
+  </div>
+
+  <!-- PIED D'ARAIGNÉE -->
+  <h2 class="section-h">🕷️ Pied d'araignée — Web Scraping OSINT</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Scrapy / SpiderFoot / Crawler</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># SpiderFoot — OSINT automatisé complet</span>
+<span class="cmd-comment"># Installation</span>
+pip3 install spiderfoot
+spiderfoot -l 127.0.0.1:5001
+
+<span class="cmd-comment"># CLI mode</span>
+python3 sf.py <span class="cmd-flag">-s target.com -m all -o json -q</span>
+
+<span class="cmd-comment"># Scrapy — crawler Python personnalisable</span>
+pip3 install scrapy
+scrapy startproject myspider
+scrapy crawl myspider <span class="cmd-flag">-a url=http://target.com</span>
+
+<span class="cmd-comment"># GoSpider — rapide et simple</span>
+go install github.com/jaeles-project/gospider@latest
+gospider <span class="cmd-flag">-s</span> <span class="cmd-string">"http://target.com"</span> <span class="cmd-flag">-c 10 -d 5</span>
+
+<span class="cmd-comment"># Katana — crawler OSINT avancé</span>
+go install github.com/projectdiscovery/katana/cmd/katana@latest
+katana <span class="cmd-flag">-u</span> <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-jc -d 5</span>
+
+<span class="cmd-comment"># hakrawler — simple et rapide</span>
+echo "https://target.com" | hakrawler <span class="cmd-flag">-d 3 -subs</span>
+
+<span class="cmd-comment"># Extraire tous les emails d'une page</span>
+curl <span class="cmd-flag">-s</span> <span class="cmd-value">http://target.com</span> | grep <span class="cmd-flag">-oE</span> <span class="cmd-string">'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'</span>
+
+<span class="cmd-comment"># Extraire tous les liens</span>
+curl <span class="cmd-flag">-s</span> <span class="cmd-value">http://target.com</span> | grep <span class="cmd-flag">-oE</span> <span class="cmd-string">'href="[^"]+"'</span> | sed <span class="cmd-string">'s/href="//;s/"$//'</span></code></pre>
+  </div>
+
+  <!-- RESSOURCES OSINT -->
+  <h2 class="section-h">🔗 Ressources OSINT en ligne</h2>
+  <div class="tools-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+    <div class="tool-card">
+      <div class="tool-name">🔍 OSINT Framework</div>
+      <div class="tool-desc">Arbre de décision complet pour la collecte d'informations OSINT.</div>
+      <div class="tool-links"><a href="https://osintframework.com" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">📋 IntelTechniques</div>
+      <div class="tool-desc">Outils et ressources OSINT par Michael Bazzell. Recherche sur réseaux sociaux, email, téléphone.</div>
+      <div class="tool-links"><a href="https://inteltechniques.com/tools/" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">🌐 crt.sh</div>
+      <div class="tool-desc">Recherche de certificats SSL pour découvrir des sous-domaines via Certificate Transparency.</div>
+      <div class="tool-links"><a href="https://crt.sh" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">🕵️ Hunter.io</div>
+      <div class="tool-desc">Recherche d'emails professionnels associés à un domaine.</div>
+      <div class="tool-links"><a href="https://hunter.io" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">📡 Shodan</div>
+      <div class="tool-desc">Moteur de recherche pour appareils connectés — ports, services, vulnérabilités.</div>
+      <div class="tool-links"><a href="https://shodan.io" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">🗺️ Maltego</div>
+      <div class="tool-desc">Visualisation graphique des relations OSINT (personnes, domaines, IPs, emails).</div>
+      <div class="tool-links"><a href="https://maltego.com" target="_blank" class="tool-link primary">Accéder</a></div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

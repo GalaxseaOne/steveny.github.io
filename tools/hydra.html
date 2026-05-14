@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hydra — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🐍</div>
+    <div>
+      <div class="tool-page-title">Hydra</div>
+      <div class="tool-page-subtitle">Brute force rapide — SSH, FTP, HTTP, SMB, RDP, MySQL et 50+ protocoles</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-red">Password</span>
+        <span class="badge badge-blue">Bruteforce</span>
+        <span class="badge badge-orange">Réseau</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali / Debian / Ubuntu</span>
+sudo apt install hydra
+
+<span class="cmd-comment"># Vérifier les modules supportés</span>
+hydra -U ssh
+hydra --list-modules</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Cheatsheet Hydra</h2>
+
+  <h3 class="sub-h">Syntaxe de base</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Syntaxe générale</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Format général</span>
+hydra <span class="cmd-flag">-l</span> <span class="cmd-value">utilisateur</span> <span class="cmd-flag">-P</span> <span class="cmd-value">wordlist.txt</span> <span class="cmd-value">protocole://IP</span>
+hydra <span class="cmd-flag">-L</span> <span class="cmd-value">users.txt</span> <span class="cmd-flag">-P</span> <span class="cmd-value">passwords.txt</span> <span class="cmd-value">protocole://IP</span>
+
+<span class="cmd-comment">Flags principaux :</span>
+<span class="cmd-success">-l</span>  — login unique
+<span class="cmd-success">-L</span>  — liste de logins
+<span class="cmd-success">-p</span>  — mot de passe unique
+<span class="cmd-success">-P</span>  — wordlist de mots de passe
+<span class="cmd-success">-t</span>  — threads (défaut 16)
+<span class="cmd-success">-s</span>  — port personnalisé
+<span class="cmd-success">-v</span>  — verbose
+<span class="cmd-success">-V</span>  — très verbose (voir chaque tentative)
+<span class="cmd-success">-f</span>  — stopper après premier succès
+<span class="cmd-success">-o</span>  — sortie dans fichier
+<span class="cmd-success">-e nsr</span> — tester null, same, reverse</code></pre>
+  </div>
+
+  <h3 class="sub-h">Par protocole</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">SSH, FTP, Telnet, SMB, RDP</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># SSH</span>
+hydra <span class="cmd-flag">-l</span> root <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">ssh://</span>192.168.1.1
+hydra <span class="cmd-flag">-L</span> users.txt <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-t 4 ssh://</span>192.168.1.1
+
+<span class="cmd-comment"># FTP</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">ftp://</span>192.168.1.1
+
+<span class="cmd-comment"># Telnet</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">telnet://</span>192.168.1.1
+
+<span class="cmd-comment"># SMB (Windows)</span>
+hydra <span class="cmd-flag">-l</span> administrator <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">smb://</span>192.168.1.1
+
+<span class="cmd-comment"># RDP (Remote Desktop)</span>
+hydra <span class="cmd-flag">-l</span> administrator <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">rdp://</span>192.168.1.1
+
+<span class="cmd-comment"># VNC</span>
+hydra <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">vnc://</span>192.168.1.1</code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Bases de données & Services</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># MySQL</span>
+hydra <span class="cmd-flag">-l</span> root <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">mysql://</span>192.168.1.1
+
+<span class="cmd-comment"># PostgreSQL</span>
+hydra <span class="cmd-flag">-l</span> postgres <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">postgres://</span>192.168.1.1
+
+<span class="cmd-comment"># MSSQL</span>
+hydra <span class="cmd-flag">-l</span> sa <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">mssql://</span>192.168.1.1
+
+<span class="cmd-comment"># SMTP</span>
+hydra <span class="cmd-flag">-l</span> user@target.com <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">smtp://</span>192.168.1.1
+
+<span class="cmd-comment"># POP3</span>
+hydra <span class="cmd-flag">-l</span> user <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">pop3://</span>192.168.1.1
+
+<span class="cmd-comment"># IMAP</span>
+hydra <span class="cmd-flag">-l</span> user <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">imap://</span>192.168.1.1
+
+<span class="cmd-comment"># Redis</span>
+hydra <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">redis://</span>192.168.1.1
+
+<span class="cmd-comment"># LDAP</span>
+hydra <span class="cmd-flag">-l</span> "cn=admin,dc=target,dc=com" <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">ldap://</span>192.168.1.1</code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">HTTP — Formulaires web</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># HTTP Basic Auth</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">http-get://</span>192.168.1.1<span class="cmd-value">/admin</span>
+
+<span class="cmd-comment"># HTTP POST Form (identifier le message d'échec !)</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-value">192.168.1.1</span> http-post-form <span class="cmd-string">"/login:username=^USER^&password=^PASS^:F=Invalid credentials"</span>
+
+<span class="cmd-comment"># HTTPS POST Form</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-s 443</span> <span class="cmd-value">192.168.1.1</span> https-post-form <span class="cmd-string">"/login:user=^USER^&pass=^PASS^:F=Wrong password"</span>
+
+<span class="cmd-comment"># Avec cookie de session (CSRF token)</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-value">192.168.1.1</span> http-post-form <span class="cmd-string">"/login:user=^USER^&pass=^PASS^:F=Error:H=Cookie: PHPSESSID=abc123"</span>
+
+<span class="cmd-comment"># Format de la chaine http-post-form :</span>
+<span class="cmd-comment"># "/chemin:corps_POST:message_echec"</span>
+<span class="cmd-comment"># ^USER^ et ^PASS^ = variables Hydra</span>
+<span class="cmd-comment"># F= = string indiquant un échec</span>
+<span class="cmd-comment"># S= = string indiquant un succès</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Options avancées</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Options avancées</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Plusieurs cibles</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-M</span> targets.txt ssh
+
+<span class="cmd-comment"># Reprendre une session</span>
+hydra <span class="cmd-flag">-R</span>
+
+<span class="cmd-comment"># Tester null, same, reverse password</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-e nsr</span> ssh://192.168.1.1
+<span class="cmd-comment"># n=null password, s=same as login, r=reverse login</span>
+
+<span class="cmd-comment"># Limiter les threads (éviter lockout)</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-t 2 -w 30</span> ssh://192.168.1.1
+<span class="cmd-comment"># -w = temps d'attente entre tentatives</span>
+
+<span class="cmd-comment"># Via proxy</span>
+hydra <span class="cmd-flag">-l</span> admin <span class="cmd-flag">-P</span> rockyou.txt <span class="cmd-flag">-o results.txt -f</span> ssh://192.168.1.1</code></pre>
+  </div>
+
+  <div class="info-box danger">
+    <span class="info-box-icon">🚫</span>
+    <div class="info-box-text"><strong>Account Lockout :</strong> Soyez prudent avec le nombre de threads. Beaucoup de systèmes bloquent les comptes après 3-5 tentatives. Utilisez <code>-t 2</code> et <code>-w 30</code> pour ralentir l'attaque et éviter de bloquer les comptes légitimes.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

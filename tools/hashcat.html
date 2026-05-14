@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hashcat — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">⚡</div>
+    <div>
+      <div class="tool-page-title">Hashcat</div>
+      <div class="tool-page-subtitle">Cracking de hashes accéléré GPU — 300+ types de hashes supportés</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-yellow">Password</span>
+        <span class="badge badge-purple">GPU</span>
+        <span class="badge badge-red">Hash</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">📋 Modes d'attaque (-a)</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Attack modes</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-success">-a 0</span>  Dictionnaire (wordlist)
+<span class="cmd-success">-a 1</span>  Combinaison (deux wordlists combinées)
+<span class="cmd-success">-a 3</span>  Brute force par masque
+<span class="cmd-success">-a 6</span>  Hybride wordlist + masque
+<span class="cmd-success">-a 7</span>  Hybride masque + wordlist</code></pre>
+  </div>
+
+  <h2 class="section-h">🔢 Modes de hash courants (-m)</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Hash modes</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">MODE    TYPE            EXEMPLE</span>
+<span class="cmd-success">0</span>       MD5             5f4dcc3b5aa765d61d8327deb882cf99
+<span class="cmd-success">100</span>     SHA1            5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+<span class="cmd-success">1400</span>    SHA-256         5e884898da28047151d0e56f8dc629277360...
+<span class="cmd-success">1700</span>    SHA-512         b109f3bbbc244eb82441917ed06d618b9008...
+<span class="cmd-success">900</span>     MD4             8a9d093f14f8701df17732b2bb182c74
+<span class="cmd-success">1000</span>    NTLM            b4b9b02e6f09a9bd760f388b67351e2b
+<span class="cmd-success">5500</span>    NetNTLMv1       user::domain:challenge:hash:hash2
+<span class="cmd-success">5600</span>    NetNTLMv2       user::domain:challenge:hash:hash2
+<span class="cmd-success">13100</span>   Kerberoast TGS  $krb5tgs$23$...
+<span class="cmd-success">18200</span>   AS-REP Roast    $krb5asrep$23$...
+<span class="cmd-success">1800</span>    sha512crypt $6$ $6$rounds=5000$...
+<span class="cmd-success">500</span>     md5crypt $1$     $1$...
+<span class="cmd-success">3200</span>    bcrypt $2*$      $2y$10$...
+<span class="cmd-success">400</span>     phpass (WP)     $P$...
+<span class="cmd-success">22000</span>   WPA-PBKDF2      (handshake WiFi)
+<span class="cmd-success">2500</span>    WPA/WPA2 EAPOL  (ancien format)
+<span class="cmd-success">11600</span>   7-Zip           $7z$...
+<span class="cmd-success">13600</span>   WinZip          $zip2$...
+<span class="cmd-success">10400</span>   PDF 1.1-1.3     $pdf$1*2...
+<span class="cmd-success">9400</span>    MS Office 2007  $office$2007...
+
+<span class="cmd-comment"># Identifier un hash</span>
+hashcat <span class="cmd-flag">--identify</span> <span class="cmd-value">hash.txt</span>
+hashid <span class="cmd-value">5f4dcc3b5aa765d61d8327deb882cf99</span></code></pre>
+  </div>
+
+  <h2 class="section-h">⚡ Commandes principales</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Attaques courantes</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Attaque dictionnaire (-a 0)</span>
+hashcat <span class="cmd-flag">-m 0 -a 0</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">/usr/share/wordlists/rockyou.txt</span>
+
+<span class="cmd-comment"># NTLM avec dictionnaire</span>
+hashcat <span class="cmd-flag">-m 1000 -a 0</span> <span class="cmd-value">ntlm_hashes.txt</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># NTLMv2 (Responder)</span>
+hashcat <span class="cmd-flag">-m 5600 -a 0</span> <span class="cmd-value">ntlmv2.txt</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># Kerberoast</span>
+hashcat <span class="cmd-flag">-m 13100 -a 0</span> <span class="cmd-value">kerberoast.txt</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># AS-REP Roast</span>
+hashcat <span class="cmd-flag">-m 18200 -a 0</span> <span class="cmd-value">asrep.txt</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># WPA handshake (après capture)</span>
+hashcat <span class="cmd-flag">-m 22000 -a 0</span> <span class="cmd-value">capture.hc22000</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># Avec règles</span>
+hashcat <span class="cmd-flag">-m 0 -a 0</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">-r</span> <span class="cmd-value">/usr/share/hashcat/rules/best64.rule</span>
+hashcat <span class="cmd-flag">-m 0 -a 0</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">-r</span> <span class="cmd-value">/usr/share/hashcat/rules/d3ad0ne.rule</span>
+
+<span class="cmd-comment"># Afficher les mots de passe crackés</span>
+hashcat <span class="cmd-flag">-m 0 --show</span> <span class="cmd-value">hash.txt</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Brute force par masque (-a 3)</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Masques Hashcat</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">Caractères de masque :</span>
+<span class="cmd-success">?l</span>  — minuscules (a-z)
+<span class="cmd-success">?u</span>  — majuscules (A-Z)
+<span class="cmd-success">?d</span>  — chiffres (0-9)
+<span class="cmd-success">?s</span>  — caractères spéciaux
+<span class="cmd-success">?a</span>  — tous (?l?u?d?s)
+<span class="cmd-success">?b</span>  — bytes 0x00-0xff
+
+<span class="cmd-comment"># 8 minuscules</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-string">"?l?l?l?l?l?l?l?l"</span>
+
+<span class="cmd-comment"># Mot de passe de 6 à 8 caractères (increment)</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-string">"?a?a?a?a?a?a"</span> <span class="cmd-flag">--increment --increment-min 6</span>
+
+<span class="cmd-comment"># Pattern commun : Mot+chiffres (ex: password123)</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-string">"?l?l?l?l?l?l?l?d?d?d"</span>
+
+<span class="cmd-comment"># Majuscule + 6 min + 2 chiffres</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-string">"?u?l?l?l?l?l?l?d?d"</span>
+
+<span class="cmd-comment"># Fichier de masques prédéfinis</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">/usr/share/hashcat/masks/rockyou-7-2592000.hcmask</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Règles de transformation</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Règles hashcat (transformations)</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Règles incluses dans Kali</span>
+ls /usr/share/hashcat/rules/
+<span class="cmd-success">best64.rule</span>         — 64 meilleures règles
+<span class="cmd-success">d3ad0ne.rule</span>       — ~34k règles
+<span class="cmd-success">dive.rule</span>           — ~99k règles (lent)
+<span class="cmd-success">rockyou-30000.rule</span> — basé sur rockyou
+<span class="cmd-success">KoreLogicRules*</span>    — règles professionnelles
+
+<span class="cmd-comment"># Générer des règles avec combinator</span>
+hashcat <span class="cmd-flag">-m 0 -a 0</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">wordlist.txt</span> <span class="cmd-flag">-r</span> <span class="cmd-value">best64.rule</span> <span class="cmd-flag">-r</span> <span class="cmd-value">d3ad0ne.rule</span></code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

