@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spider / Crawlers — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🕷️</div>
+    <div>
+      <div class="tool-page-title">Spider & Crawlers</div>
+      <div class="tool-page-subtitle">Gobuster, Dirb, Feroxbuster, Scrapy — Découverte de répertoires et crawling web</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-orange">Web</span>
+        <span class="badge badge-blue">Crawl</span>
+        <span class="badge badge-green">Énumération</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOBUSTER -->
+  <h2 class="section-h">🔫 Gobuster</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Gobuster — Installation & Commandes</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install gobuster
+go install github.com/OJ/gobuster/v3@latest
+
+<span class="cmd-comment"># Découverte de répertoires (mode dir)</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">/usr/share/wordlists/dirb/common.txt</span>
+
+<span class="cmd-comment"># Avec extensions</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">common.txt</span> <span class="cmd-flag">-x php,html,txt,bak,sql</span>
+
+<span class="cmd-comment"># Avec threads (plus rapide)</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">common.txt</span> <span class="cmd-flag">-t 50</span>
+
+<span class="cmd-comment"># Avec cookie de session</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">common.txt</span> <span class="cmd-flag">-c</span> <span class="cmd-string">"PHPSESSID=abc123"</span>
+
+<span class="cmd-comment"># Ignorer certains codes de réponse</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">common.txt</span> <span class="cmd-flag">--exclude-length 0</span>
+
+<span class="cmd-comment"># Énumération de sous-domaines (mode dns)</span>
+gobuster dns <span class="cmd-flag">-d</span> <span class="cmd-value">target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt</span>
+
+<span class="cmd-comment"># Mode vhost (virtual hosts)</span>
+gobuster vhost <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">subdomains.txt</span> <span class="cmd-flag">--append-domain</span>
+
+<span class="cmd-comment"># Output dans fichier</span>
+gobuster dir <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">common.txt</span> <span class="cmd-flag">-o</span> <span class="cmd-value">results.txt</span></code></pre>
+  </div>
+
+  <!-- FEROXBUSTER -->
+  <h2 class="section-h">🚀 Feroxbuster</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Feroxbuster — Récursif et rapide</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install feroxbuster
+curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/main/install-nix.sh | bash
+
+<span class="cmd-comment"># Scan basique</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span>
+
+<span class="cmd-comment"># Avec wordlist personnalisée</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-w</span> <span class="cmd-value">/usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt</span>
+
+<span class="cmd-comment"># Avec extensions (récursif par défaut)</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-x php,html,txt,js</span>
+
+<span class="cmd-comment"># Profondeur maximale</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-d 3</span>
+
+<span class="cmd-comment"># Filtrer par taille de réponse</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">--filter-size 0</span>
+
+<span class="cmd-comment"># Threads</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-t 100</span>
+
+<span class="cmd-comment"># Mode silencieux avec sortie JSON</span>
+feroxbuster <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">--json -o</span> <span class="cmd-value">results.json</span> <span class="cmd-flag">-q</span></code></pre>
+  </div>
+
+  <!-- DIRB -->
+  <h2 class="section-h">📂 Dirb</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Dirb</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Scan basique (wordlist intégrée)</span>
+dirb <span class="cmd-value">http://target.com</span>
+
+<span class="cmd-comment"># Wordlist personnalisée</span>
+dirb <span class="cmd-value">http://target.com</span> <span class="cmd-value">/usr/share/wordlists/dirb/big.txt</span>
+
+<span class="cmd-comment"># Avec extensions</span>
+dirb <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-X</span> <span class="cmd-value">.php,.html,.txt</span>
+
+<span class="cmd-comment"># Avec cookies</span>
+dirb <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-c</span> <span class="cmd-string">"cookie=value"</span>
+
+<span class="cmd-comment"># Output fichier</span>
+dirb <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-o</span> <span class="cmd-value">output.txt</span>
+
+<span class="cmd-comment"># Ignorer les codes</span>
+dirb <span class="cmd-value">http://target.com</span> <span class="cmd-flag">-N 404</span></code></pre>
+  </div>
+
+  <!-- WORDLISTS -->
+  <h2 class="section-h">📚 Wordlists recommandées</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">SecLists — Chemins utiles</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation SecLists</span>
+sudo apt install seclists
+git clone https://github.com/danielmiessler/SecLists.git /opt/SecLists
+
+<span class="cmd-comment"># Répertoires web courants</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/common.txt</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt</span>
+
+<span class="cmd-comment"># APIs et routes</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt</span>
+
+<span class="cmd-comment"># Fichiers sensibles</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/quickhits.txt</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/Web-Content/raft-large-files.txt</span>
+
+<span class="cmd-comment"># Sous-domaines</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt</span>
+<span class="cmd-success">/usr/share/seclists/Discovery/DNS/fierce-hostlist.txt</span>
+
+<span class="cmd-comment"># Intégré à Kali</span>
+<span class="cmd-success">/usr/share/wordlists/dirb/common.txt</span>
+<span class="cmd-success">/usr/share/wordlists/dirb/big.txt</span>
+<span class="cmd-success">/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span></code></pre>
+  </div>
+
+  <!-- FFUF -->
+  <h2 class="section-h">⚡ ffuf — Fuzzing rapide</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">ffuf</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install ffuf
+go install github.com/ffuf/ffuf/v2@latest
+
+<span class="cmd-comment"># Répertoires web</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com/FUZZ</span> <span class="cmd-flag">-w</span> <span class="cmd-value">wordlist.txt</span>
+
+<span class="cmd-comment"># Filtrer par code HTTP</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com/FUZZ</span> <span class="cmd-flag">-w</span> <span class="cmd-value">wordlist.txt</span> <span class="cmd-flag">-mc 200,301,302</span>
+
+<span class="cmd-comment"># Filtrer par taille</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com/FUZZ</span> <span class="cmd-flag">-w</span> <span class="cmd-value">wordlist.txt</span> <span class="cmd-flag">-fs 1234</span>
+
+<span class="cmd-comment"># Fuzzing de paramètres GET</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">"http://target.com/page?FUZZ=test"</span> <span class="cmd-flag">-w</span> <span class="cmd-value">params.txt</span>
+
+<span class="cmd-comment"># Fuzzing POST</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com/login</span> <span class="cmd-flag">-X POST -d</span> <span class="cmd-string">"username=FUZZ&password=test"</span> <span class="cmd-flag">-w</span> <span class="cmd-value">users.txt</span>
+
+<span class="cmd-comment"># Sous-domaines (vhosts)</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com</span> <span class="cmd-flag">-H</span> <span class="cmd-string">"Host: FUZZ.target.com"</span> <span class="cmd-flag">-w</span> <span class="cmd-value">subdomains.txt</span> <span class="cmd-flag">-fs 1234</span>
+
+<span class="cmd-comment"># Extensions + répertoires combinés</span>
+ffuf <span class="cmd-flag">-u</span> <span class="cmd-string">http://target.com/FUZZ</span> <span class="cmd-flag">-w</span> <span class="cmd-value">wordlist.txt</span> <span class="cmd-flag">-e .php,.html,.js,.bak</span></code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

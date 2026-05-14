@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burp Suite — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🔥</div>
+    <div>
+      <div class="tool-page-title">Burp Suite</div>
+      <div class="tool-page-subtitle">Proxy HTTP — Intercept, Scanner, Intruder, Repeater, Decoder</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-yellow">Web</span>
+        <span class="badge badge-red">Proxy</span>
+        <span class="badge badge-blue">PortSwigger</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">⚙️ Configuration initiale</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Setup Burp Suite</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Lancement</span>
+burpsuite &          <span class="cmd-comment"># Linux</span>
+java -jar burpsuite_community.jar  <span class="cmd-comment"># JAR direct</span>
+
+<span class="cmd-comment"># Configuration proxy navigateur</span>
+Proxy HTTP: 127.0.0.1:8080
+Proxy HTTPS: 127.0.0.1:8080
+
+<span class="cmd-comment"># Firefox — FoxyProxy (extension recommandée)</span>
+<span class="cmd-comment"># Ou configurer manuellement :</span>
+<span class="cmd-comment"># Préférences → Réseau → Paramètres → Proxy manuel</span>
+
+<span class="cmd-comment"># Installer le certificat CA Burp (pour HTTPS)</span>
+<span class="cmd-comment"># 1. Naviguer vers http://burpsuite OU http://127.0.0.1:8080</span>
+<span class="cmd-comment"># 2. Télécharger le certificat CA</span>
+<span class="cmd-comment"># 3. Firefox : about:preferences → Sécurité → Certificats → Importer</span>
+
+<span class="cmd-comment"># Kali — Chromium avec Burp</span>
+chromium --proxy-server="127.0.0.1:8080" --ignore-certificate-errors</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Modules principaux</h2>
+
+  <h3 class="sub-h">Proxy & Intercept</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Proxy — Utilisation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">Raccourcis clavier essentiels :</span>
+<span class="cmd-success">Ctrl+F</span>      — Forward (laisser passer la requête)
+<span class="cmd-success">Ctrl+A</span>      — Send to all tabs
+<span class="cmd-success">Ctrl+R</span>      — Send to Repeater
+<span class="cmd-success">Ctrl+I</span>      — Send to Intruder
+<span class="cmd-success">Ctrl+Shift+R</span> — Send to Scanner
+
+<span class="cmd-comment">Actions sur les requêtes interceptées :</span>
+- Clic droit → "Send to Repeater" → modifier et rejouer
+- Clic droit → "Send to Intruder" → fuzzing/brute force
+- Clic droit → "Do intercept" → désactiver pour cette requête
+- Clic droit → "Save item" → sauvegarder
+- Clic droit → "Copy as curl command" → exporter</code></pre>
+  </div>
+
+  <h3 class="sub-h">Repeater</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Repeater — Tests manuels</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Le Repeater permet de modifier et rejouer des requêtes manuellement</span>
+<span class="cmd-comment"># Utile pour : SQLi manuelle, tests XSS, exploitation logique métier</span>
+
+<span class="cmd-comment">Workflow :</span>
+1. Intercepter une requête (Proxy → Intercept ON)
+2. Clic droit → Send to Repeater (Ctrl+R)
+3. Modifier la requête dans le Repeater
+4. Cliquer "Send" pour envoyer
+5. Analyser la réponse
+
+<span class="cmd-comment">Tests courants dans le Repeater :</span>
+<span class="cmd-comment"># Injection SQL basique</span>
+GET /page?id=1' OR '1'='1
+
+<span class="cmd-comment"># XSS</span>
+GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt;
+
+<span class="cmd-comment"># Path traversal</span>
+GET /download?file=../../../../etc/passwd
+
+<span class="cmd-comment"># SSRF</span>
+POST /fetch  body: url=http://169.254.169.254/latest/meta-data/</code></pre>
+  </div>
+
+  <h3 class="sub-h">Intruder — Fuzzing & Brute Force</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Intruder</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code"><span class="cmd-comment">Types d'attaques Intruder :</span>
+<span class="cmd-success">Sniper</span>      — 1 payload, 1 position (le plus courant)
+<span class="cmd-success">Battering Ram</span> — 1 payload, toutes les positions simultanément
+<span class="cmd-success">Pitchfork</span>  — N payloads pour N positions (username:password)
+<span class="cmd-success">Cluster Bomb</span> — Toutes les combinaisons (brute force)
+
+<span class="cmd-comment">Workflow brute force login :</span>
+1. Intercepter une requête POST de login
+2. Send to Intruder
+3. Onglet "Positions" → Clear § → sélectionner le champ password → Add §
+4. Onglet "Payloads" → Type: Simple list → charger wordlist
+5. Start Attack
+6. Analyser la longueur de réponse (différente = succès)
+
+<span class="cmd-comment">Types de payloads utiles :</span>
+<span class="cmd-success">Simple list</span>   — Wordlist statique
+<span class="cmd-success">Runtime file</span>  — Charger un fichier en temps réel
+<span class="cmd-success">Numbers</span>       — Séquences numériques
+<span class="cmd-success">Brute forcer</span>  — Caractères + longueur
+<span class="cmd-success">Username generator</span> — Variations d'un nom</code></pre>
+  </div>
+
+  <h3 class="sub-h">Decoder & Encoder</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Decoder — Encodages</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">Formats supportés :</span>
+<span class="cmd-success">URL encode/decode</span>           — %20, %3D, etc.
+<span class="cmd-success">HTML encode/decode</span>          — &amp;amp;, &amp;lt;, etc.
+<span class="cmd-success">Base64 encode/decode</span>        — dGVzdA==
+<span class="cmd-success">Base64 URL encode/decode</span>    — JWT compatible
+<span class="cmd-success">Hex encode/decode</span>           — 74657374
+<span class="cmd-success">ASCII Hex encode/decode</span>
+<span class="cmd-success">Gzip decompress</span>
+<span class="cmd-success">Hash</span>                        — MD5, SHA1, SHA256
+
+<span class="cmd-comment">Utilisations courantes :</span>
+<span class="cmd-comment"># Décoder un token JWT</span>
+<span class="cmd-comment"># 1. Copier le payload JWT (partie après le premier .)</span>
+<span class="cmd-comment"># 2. Decoder → Base64 decode → lire le JSON</span>
+
+<span class="cmd-comment"># Encoder un XSS payload pour bypass WAF</span>
+<span class="cmd-comment"># &lt;script&gt; → URL encode → %3Cscript%3E</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Extensions Burp Suite</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Extensions recommandées (BApp Store)</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-success">JWT Editor</span>           — Modifier et forger des tokens JWT
+<span class="cmd-success">AuthMatrix</span>           — Tester les contrôles d'accès
+<span class="cmd-success">Param Miner</span>          — Découvrir des paramètres cachés
+<span class="cmd-success">Hackvertor</span>           — Encodages avancés pour bypass WAF
+<span class="cmd-success">Active Scan++</span>        — Scanner amélioré
+<span class="cmd-success">SQLiPy Sqlmap</span>        — Intégration SQLMap directe
+<span class="cmd-success">CSRF Scanner</span>         — Détection CSRF automatique
+<span class="cmd-success">Turbo Intruder</span>       — Intruder ultra-rapide (Python)
+<span class="cmd-success">Logger++</span>             — Log toutes les requêtes
+<span class="cmd-success">Retire.js</span>            — Détecter les libs JS vulnérables</code></pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text"><strong>PortSwigger Web Academy :</strong> Pratiquez les vulnérabilités web sur les labs gratuits de <a href="https://portswigger.net/web-security" target="_blank">portswigger.net/web-security</a> — SQLi, XSS, SSRF, IDOR, OAuth, etc.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireshark — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html" class="active">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🦈</div>
+    <div>
+      <div class="tool-page-title">Wireshark</div>
+      <div class="tool-page-subtitle">Analyseur de protocole réseau — Capture et inspection du trafic en temps réel</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-blue">Réseau</span>
+        <span class="badge badge-purple">Analyse</span>
+        <span class="badge badge-green">PCAP</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">Capturez uniquement le trafic sur des réseaux dont vous êtes propriétaire ou autorisé à analyser. L'interception non autorisée est illégale.</div>
+  </div>
+
+  <h2 class="section-h">📦 Installation & lancement</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Debian / Ubuntu / Kali</span>
+sudo apt install wireshark tshark
+
+<span class="cmd-comment"># Permettre à l'utilisateur de capturer sans sudo</span>
+sudo usermod -aG wireshark $USER
+
+<span class="cmd-comment"># Lancement CLI en temps réel</span>
+wireshark <span class="cmd-flag">-i eth0 -k</span>
+
+<span class="cmd-comment"># Capture et sauvegarde</span>
+wireshark <span class="cmd-flag">-i eth0 -k -w</span> <span class="cmd-value">capture.pcap</span>
+
+<span class="cmd-comment"># Ouvrir un fichier PCAP existant</span>
+wireshark <span class="cmd-value">capture.pcap</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🖥️ tshark — Wireshark en ligne de commande</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">tshark CLI</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Lister les interfaces disponibles</span>
+tshark <span class="cmd-flag">-D</span>
+
+<span class="cmd-comment"># Capturer sur eth0</span>
+tshark <span class="cmd-flag">-i eth0</span>
+
+<span class="cmd-comment"># Capturer avec filtre BPF</span>
+tshark <span class="cmd-flag">-i eth0 -f</span> <span class="cmd-string">"tcp port 80"</span>
+
+<span class="cmd-comment"># Sauvegarder dans un fichier</span>
+tshark <span class="cmd-flag">-i eth0 -w</span> <span class="cmd-value">output.pcap</span>
+
+<span class="cmd-comment"># Lire et filtrer un fichier PCAP</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-Y</span> <span class="cmd-string">"http"</span>
+
+<span class="cmd-comment"># Extraire les champs spécifiques</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-T fields -e ip.src -e ip.dst -e http.request.uri</span>
+
+<span class="cmd-comment"># Statistiques protocoles</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-q -z io,phs</span>
+
+<span class="cmd-comment"># Top conversations</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-q -z conv,tcp</span>
+
+<span class="cmd-comment"># Extraire les credentials HTTP Basic Auth</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-Y</span> <span class="cmd-string">"http.authorization"</span> <span class="cmd-flag">-T fields -e http.authorization</span>
+
+<span class="cmd-comment"># Suivre un flux TCP spécifique</span>
+tshark <span class="cmd-flag">-r</span> <span class="cmd-value">capture.pcap</span> <span class="cmd-flag">-z follow,tcp,ascii,0</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🔍 Filtres Display (Wireshark GUI)</h2>
+  <p style="color:var(--text-secondary); margin-bottom:16px; font-size:14px;">À saisir dans la barre de filtre de Wireshark. Cliquez sur une ligne pour copier.</p>
+
+  <div class="code-block" style="margin-bottom:24px;">
+    <div class="code-block-header"><span class="code-block-title">Display Filters — Réseau</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Filtrer par protocole</span>
+http
+https
+dns
+ftp
+ssh
+telnet
+smtp
+icmp
+arp
+
+<span class="cmd-comment"># Par adresse IP</span>
+ip.addr == 192.168.1.1
+ip.src == 10.0.0.5
+ip.dst == 192.168.1.100
+
+<span class="cmd-comment"># Par port</span>
+tcp.port == 80
+udp.port == 53
+tcp.dstport == 443
+
+<span class="cmd-comment"># Combinaisons logiques</span>
+ip.src == 192.168.1.1 and tcp.port == 80
+http or dns
+!(arp or icmp)</code></pre>
+  </div>
+
+  <div class="code-block" style="margin-bottom:24px;">
+    <div class="code-block-header"><span class="code-block-title">Display Filters — HTTP / Web</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Requêtes HTTP uniquement</span>
+http.request
+
+<span class="cmd-comment"># Réponses HTTP</span>
+http.response
+
+<span class="cmd-comment"># Par méthode</span>
+http.request.method == "POST"
+http.request.method == "GET"
+
+<span class="cmd-comment"># Par code de réponse</span>
+http.response.code == 200
+http.response.code == 401
+http.response.code >= 400
+
+<span class="cmd-comment"># Recherche dans l'URI</span>
+http.request.uri contains "login"
+http.request.uri contains "admin"
+
+<span class="cmd-comment"># Credentials en clair</span>
+http.authbasic
+http contains "password"
+http contains "passwd"
+
+<span class="cmd-comment"># Cookies</span>
+http.cookie
+http.set_cookie</code></pre>
+  </div>
+
+  <div class="code-block" style="margin-bottom:24px;">
+    <div class="code-block-header"><span class="code-block-title">Display Filters — DNS, FTP, SMB</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># DNS queries</span>
+dns.qry.name contains "target.com"
+dns.qry.type == 1    <span class="cmd-comment"># A records</span>
+dns.qry.type == 28   <span class="cmd-comment"># AAAA records</span>
+dns.flags.response == 0   <span class="cmd-comment"># Requêtes seulement</span>
+
+<span class="cmd-comment"># FTP credentials</span>
+ftp.request.command == "USER"
+ftp.request.command == "PASS"
+
+<span class="cmd-comment"># SMB (recherche de shares)</span>
+smb2
+smb2.cmd == 3    <span class="cmd-comment"># Tree Connect</span>
+
+<span class="cmd-comment"># ARP scanning / spoofing</span>
+arp
+arp.opcode == 1   <span class="cmd-comment"># ARP requests</span>
+
+<span class="cmd-comment"># Paquets TCP avec flag RST</span>
+tcp.flags.reset == 1
+
+<span class="cmd-comment"># SYN scan detection</span>
+tcp.flags.syn == 1 and tcp.flags.ack == 0</code></pre>
+  </div>
+
+  <h2 class="section-h">🎣 Filtres de capture BPF</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">BPF Capture Filters</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Capturer seulement TCP port 80</span>
+tcp port 80
+
+<span class="cmd-comment"># Capturer tout sauf ssh (port 22)</span>
+not port 22
+
+<span class="cmd-comment"># Capturer le trafic d'une IP spécifique</span>
+host 192.168.1.1
+
+<span class="cmd-comment"># Trafic réseau entier sauf broadcast</span>
+not broadcast and not multicast
+
+<span class="cmd-comment"># Ports multiples</span>
+tcp port 80 or tcp port 443 or tcp port 8080
+
+<span class="cmd-comment"># Sous-réseau</span>
+net 192.168.1.0/24
+
+<span class="cmd-comment"># Paquets ICMP seulement</span>
+icmp
+
+<span class="cmd-comment"># UDP port 53 (DNS)</span>
+udp port 53</code></pre>
+  </div>
+
+  <h2 class="section-h">🔧 Fonctions avancées</h2>
+  <div class="two-col">
+    <div>
+      <div class="info-box tip">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-text"><strong>Follow TCP Stream :</strong> Clic droit sur un paquet → "Follow" → "TCP Stream" pour reconstituer une session complète en clair.</div>
+      </div>
+      <div class="info-box tip">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-text"><strong>Export Objects :</strong> File → Export Objects → HTTP pour extraire les fichiers transférés (images, exécutables, documents).</div>
+      </div>
+    </div>
+    <div>
+      <div class="info-box info">
+        <span class="info-box-icon">ℹ️</span>
+        <div class="info-box-text"><strong>Déchiffrement SSL/TLS :</strong> Avec la clé privée ou le fichier SSLKEYLOGFILE, Wireshark peut déchiffrer HTTPS. Edit → Preferences → Protocols → TLS.</div>
+      </div>
+      <div class="info-box info">
+        <span class="info-box-icon">ℹ️</span>
+        <div class="info-box-text"><strong>Statistics → IO Graph :</strong> Visualiser le trafic dans le temps, détecter les pics suspects ou les exfiltrations de données.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block" style="margin-top:24px;">
+    <div class="code-block-header"><span class="code-block-title">Commandes utiles — extraction de données</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Extraire les credentials FTP d'un PCAP</span>
+tshark <span class="cmd-flag">-r</span> capture.pcap <span class="cmd-flag">-Y</span> <span class="cmd-string">"ftp"</span> <span class="cmd-flag">-T fields -e ftp.request.command -e ftp.request.arg</span>
+
+<span class="cmd-comment"># Extraire les URLs visitées</span>
+tshark <span class="cmd-flag">-r</span> capture.pcap <span class="cmd-flag">-Y</span> <span class="cmd-string">"http.request"</span> <span class="cmd-flag">-T fields -e http.host -e http.request.uri</span>
+
+<span class="cmd-comment"># Extraire les hashes NTLMv2 (pour cracking)</span>
+tshark <span class="cmd-flag">-r</span> capture.pcap <span class="cmd-flag">-Y</span> <span class="cmd-string">"ntlmssp.auth"</span>
+
+<span class="cmd-comment"># Convertir PCAP en texte lisible</span>
+tcpdump <span class="cmd-flag">-r</span> capture.pcap <span class="cmd-flag">-A</span> | grep <span class="cmd-flag">-i</span> <span class="cmd-string">"password\|user\|login"</span>
+
+<span class="cmd-comment"># Extraire fichiers avec NetworkMiner (alternative)</span>
+<span class="cmd-comment"># Ou avec Xplico pour l'analyse forensique</span></code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

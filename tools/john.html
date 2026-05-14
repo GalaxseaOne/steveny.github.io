@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>John the Ripper — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html" class="active">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🔑</div>
+    <div>
+      <div class="tool-page-title">John the Ripper</div>
+      <div class="tool-page-subtitle">Cracking de mots de passe et hashes — Dictionnaire, brute force, règles</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-red">Password</span>
+        <span class="badge badge-orange">Hash</span>
+        <span class="badge badge-yellow">Offline</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali / Ubuntu (version basique)</span>
+sudo apt install john
+
+<span class="cmd-comment"># Version Jumbo (plus de formats, recommandée)</span>
+sudo apt install john
+<span class="cmd-comment"># OU depuis les sources pour la version complète :</span>
+git clone https://github.com/openwall/john.git
+cd john/src && ./configure && make -s clean && make -sj4
+cd ../run && ./john --list=formats
+
+<span class="cmd-comment"># Vérifier les formats supportés</span>
+john --list=formats
+john --list=formats | grep -i ntlm
+john --list=formats | grep -i sha</code></pre>
+  </div>
+
+  <h2 class="section-h">🔧 Wordlists essentielles</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Wordlists</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># RockYou (inclus dans Kali)</span>
+ls /usr/share/wordlists/
+gunzip /usr/share/wordlists/rockyou.txt.gz
+
+<span class="cmd-comment"># SecLists (collection complète)</span>
+sudo apt install seclists
+ls /usr/share/seclists/Passwords/
+
+<span class="cmd-comment"># Télécharger RockYou manuellement</span>
+wget https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt
+
+<span class="cmd-comment"># Wordlists utiles :</span>
+<span class="cmd-success">/usr/share/wordlists/rockyou.txt</span>             — 14M mots de passe
+<span class="cmd-success">/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt</span>
+<span class="cmd-success">/usr/share/seclists/Passwords/darkweb2017-top10000.txt</span>
+<span class="cmd-success">/usr/share/john/password.lst</span>                 — Liste intégrée à John</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Cheatsheet — John the Ripper</h2>
+
+  <h3 class="sub-h">Cracking de base</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Commandes essentielles</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Auto-détection du format et dictionnaire</span>
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">/usr/share/wordlists/rockyou.txt</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Spécifier le format manuellement</span>
+john <span class="cmd-flag">--format=</span><span class="cmd-value">md5crypt</span> <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-value">hashes.txt</span>
+john <span class="cmd-flag">--format=</span><span class="cmd-value">NT</span> <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-value">hashes.txt</span>
+john <span class="cmd-flag">--format=</span><span class="cmd-value">bcrypt</span> <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Afficher les mots de passe crackés</span>
+john <span class="cmd-flag">--show</span> <span class="cmd-value">hashes.txt</span>
+john <span class="cmd-flag">--show --format=</span><span class="cmd-value">NT</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Mode brute force pur (lent)</span>
+john <span class="cmd-flag">--incremental</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Mode single (utilise les infos du fichier)</span>
+john <span class="cmd-flag">--single</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Reprendre un cracking interrompu</span>
+john <span class="cmd-flag">--restore</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Formats de hashes courants</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Formats John</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">FORMAT          EXEMPLE / CONTEXTE</span>
+<span class="cmd-success">md5</span>             MD5 brut : 5f4dcc3b5aa765d61d8327deb882cf99
+<span class="cmd-success">sha1</span>            SHA-1 : 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+<span class="cmd-success">sha256</span>          SHA-256
+<span class="cmd-success">NT</span>              NTLM Windows : aad3b435b51404eeaad3b435b51404ee
+<span class="cmd-success">md5crypt</span>        Unix $1$ (Linux ancien)
+<span class="cmd-success">sha512crypt</span>     Unix $6$ (Linux moderne /etc/shadow)
+<span class="cmd-success">bcrypt</span>          $2a$, $2b$ (PHP/web)
+<span class="cmd-success">netntlmv2</span>       NTLMv2 (réseau Windows, Responder)
+<span class="cmd-success">wpapsk</span>          WPA handshake WiFi
+<span class="cmd-success">zip</span>             Archives ZIP protégées (zip2john)
+<span class="cmd-success">rar</span>             Archives RAR (rar2john)
+<span class="cmd-success">pdf</span>             PDF protégé (pdf2john)
+<span class="cmd-success">ssh</span>             Clé SSH chiffrée (ssh2john)
+<span class="cmd-success">keepass</span>         Base KeePass (keepass2john)
+<span class="cmd-success">office</span>          Office 2007+ (office2john)</code></pre>
+  </div>
+
+  <h3 class="sub-h">Outils de conversion (john2format)</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">*2john — Convertir pour John</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Fichier /etc/shadow Linux</span>
+unshadow /etc/passwd /etc/shadow > shadow_combined.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> shadow_combined.txt
+
+<span class="cmd-comment"># Clé SSH privée chiffrée</span>
+ssh2john <span class="cmd-value">id_rsa</span> > id_rsa_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> id_rsa_hash.txt
+
+<span class="cmd-comment"># Archive ZIP</span>
+zip2john <span class="cmd-value">archive.zip</span> > zip_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> zip_hash.txt
+
+<span class="cmd-comment"># Archive RAR</span>
+rar2john <span class="cmd-value">archive.rar</span> > rar_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> rar_hash.txt
+
+<span class="cmd-comment"># PDF protégé</span>
+pdf2john <span class="cmd-value">document.pdf</span> > pdf_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> pdf_hash.txt
+
+<span class="cmd-comment"># KeePass</span>
+keepass2john <span class="cmd-value">database.kdbx</span> > keepass_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> keepass_hash.txt
+
+<span class="cmd-comment"># Office 2007+</span>
+office2john <span class="cmd-value">document.docx</span> > office_hash.txt
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> office_hash.txt
+
+<span class="cmd-comment"># Hash NTLMv2 capturé avec Responder</span>
+john <span class="cmd-flag">--format=netntlmv2 --wordlist=</span><span class="cmd-value">rockyou.txt</span> ntlmv2_hashes.txt</code></pre>
+  </div>
+
+  <h3 class="sub-h">Règles de mutation</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Règles (Rules)</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Avec règles par défaut</span>
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">--rules</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Règles spécifiques</span>
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">--rules=</span><span class="cmd-value">Jumbo</span> <span class="cmd-value">hashes.txt</span>
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">--rules=</span><span class="cmd-value">KoreLogic</span> <span class="cmd-value">hashes.txt</span>
+
+<span class="cmd-comment"># Les règles appliquent des transformations :</span>
+<span class="cmd-comment"># password → Password, P@ssword, password1, PASSWORD, p4ssw0rd, etc.</span>
+
+<span class="cmd-comment"># Créer une wordlist mutée</span>
+john <span class="cmd-flag">--wordlist=</span><span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">--rules --stdout</span> > mutated_list.txt</code></pre>
+  </div>
+
+  <h2 class="section-h">⚡ Hashcat — Alternative GPU</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Hashcat (GPU — beaucoup plus rapide)</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Installation</span>
+sudo apt install hashcat
+
+<span class="cmd-comment"># Attaque par dictionnaire (-a 0)</span>
+hashcat <span class="cmd-flag">-m 0</span> -a 0 <span class="cmd-value">hash.txt</span> <span class="cmd-value">rockyou.txt</span>
+<span class="cmd-comment"># -m 0 = MD5   -m 100 = SHA1   -m 1000 = NTLM</span>
+<span class="cmd-comment"># -m 1800 = sha512crypt   -m 3200 = bcrypt</span>
+<span class="cmd-comment"># -m 22000 = WPA-PBKDF2   -m 5600 = NTLMv2</span>
+
+<span class="cmd-comment"># Brute force masque (-a 3)</span>
+hashcat <span class="cmd-flag">-m 0 -a 3</span> <span class="cmd-value">hash.txt</span> <span class="cmd-string">"?l?l?l?l?l?l?l?l"</span>
+<span class="cmd-comment"># ?l=minuscule ?u=majuscule ?d=chiffre ?s=spécial ?a=tous</span>
+
+<span class="cmd-comment"># Règles</span>
+hashcat <span class="cmd-flag">-m 1000 -a 0</span> <span class="cmd-value">hash.txt</span> <span class="cmd-value">rockyou.txt</span> <span class="cmd-flag">-r</span> <span class="cmd-value">/usr/share/hashcat/rules/best64.rule</span>
+
+<span class="cmd-comment"># Afficher résultats</span>
+hashcat <span class="cmd-flag">-m 0 --show</span> <span class="cmd-value">hash.txt</span>
+
+<span class="cmd-comment"># Identifier un hash</span>
+hashcat <span class="cmd-flag">--identify</span> <span class="cmd-value">5f4dcc3b5aa765d61d8327deb882cf99</span>
+
+<span class="cmd-comment"># Modes courants (-m) :</span>
+<span class="cmd-success">0</span>     MD5
+<span class="cmd-success">100</span>   SHA1
+<span class="cmd-success">1000</span>  NTLM
+<span class="cmd-success">1800</span>  sha512crypt ($6$)
+<span class="cmd-success">3200</span>  bcrypt ($2*)
+<span class="cmd-success">5600</span>  NTLMv2
+<span class="cmd-success">13100</span> Kerberoast (TGS-REP)
+<span class="cmd-success">22000</span> WPA-PBKDF2-PMKID+EAPOL</code></pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text"><strong>Identifier un hash inconnu :</strong> Utilisez <a href="https://hashes.com/en/tools/hash_identifier" target="_blank">hashes.com</a> ou <code>hashid hash.txt</code> pour identifier le format avant de lancer John ou Hashcat.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

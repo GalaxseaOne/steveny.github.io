@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nmap — PenTest Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand"><a href="../index.html" style="color:inherit;"><span class="bracket">[</span>PenTest Hub<span class="bracket">]</span></a></div>
+  <div class="navbar-nav">
+    <a href="../index.html">Dashboard</a>
+    <a href="nmap.html" class="active">Nmap</a>
+    <a href="wireshark.html">Wireshark</a>
+    <a href="sqlmap.html">SQLMap</a>
+    <a href="john.html">John</a>
+    <a href="google-dorks.html">Dorks</a>
+    <a href="osint.html">OSINT</a>
+    <a href="netcat.html">Netcat</a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <a href="../index.html" class="back-btn">← Retour au Hub</a>
+
+  <div class="tool-page-header">
+    <div class="tool-page-icon">🗺️</div>
+    <div>
+      <div class="tool-page-title">Nmap</div>
+      <div class="tool-page-subtitle">Network Mapper — Découverte d'hôtes, scan de ports, fingerprinting de services et OS</div>
+      <div class="tool-page-meta">
+        <span class="badge badge-green">Réseau</span>
+        <span class="badge badge-blue">Scanner</span>
+        <span class="badge badge-purple">v7.94+</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-text">Utilisez Nmap uniquement sur des réseaux et systèmes dont vous êtes propriétaire ou pour lesquels vous disposez d'une autorisation écrite. Les scans non autorisés sont illégaux.</div>
+  </div>
+
+  <!-- INSTALLATION -->
+  <h2 class="section-h">📦 Installation</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Debian / Ubuntu / Kali</span>
+sudo apt install nmap
+
+<span class="cmd-comment"># Arch Linux</span>
+sudo pacman -S nmap
+
+<span class="cmd-comment"># macOS (Homebrew)</span>
+brew install nmap
+
+<span class="cmd-comment"># Vérifier la version</span>
+nmap <span class="cmd-flag">--version</span></code></pre>
+  </div>
+
+  <!-- COMMAND BUILDER -->
+  <h2 class="section-h">⚙️ Générateur de commande</h2>
+  <div class="builder-form" id="nmapBuilder">
+    <div class="builder-grid">
+      <div class="form-group">
+        <label>Cible (IP / domaine / CIDR)</label>
+        <input type="text" id="nmap-target" class="form-control" placeholder="192.168.1.0/24" value="192.168.1.1">
+      </div>
+      <div class="form-group">
+        <label>Type de scan</label>
+        <select id="nmap-scantype" class="form-control">
+          <option value="-sS">-sS (SYN stealth — root requis)</option>
+          <option value="-sT">-sT (TCP Connect — sans root)</option>
+          <option value="-sU">-sU (UDP scan)</option>
+          <option value="-sA">-sA (ACK scan — firewall rules)</option>
+          <option value="-sN">-sN (NULL scan)</option>
+          <option value="-sX">-sX (Xmas scan)</option>
+          <option value="-sF">-sF (FIN scan)</option>
+          <option value="-sV">-sV (Version detection)</option>
+          <option value="-sC">-sC (Default scripts)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Timing (-T0 à -T5)</label>
+        <select id="nmap-timing" class="form-control">
+          <option value="">Défaut (-T3)</option>
+          <option value="-T0">-T0 Paranoid (très lent)</option>
+          <option value="-T1">-T1 Sneaky</option>
+          <option value="-T2">-T2 Polite</option>
+          <option value="-T4">-T4 Aggressive</option>
+          <option value="-T5">-T5 Insane (bruyant)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ports (-p)</label>
+        <input type="text" id="nmap-ports" class="form-control" placeholder="ex: 22,80,443 ou 1-1000 ou -">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Options supplémentaires</label>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" value="-sV"> -sV Versions</label>
+        <label class="checkbox-item"><input type="checkbox" value="-O"> -O OS detection</label>
+        <label class="checkbox-item"><input type="checkbox" value="-sC"> -sC Scripts défaut</label>
+        <label class="checkbox-item"><input type="checkbox" value="-A"> -A Agressif (OS+Version+Scripts)</label>
+        <label class="checkbox-item"><input type="checkbox" value="-v"> -v Verbose</label>
+        <label class="checkbox-item"><input type="checkbox" value="-Pn"> -Pn No ping</label>
+        <label class="checkbox-item"><input type="checkbox" value="-n"> -n No DNS</label>
+        <label class="checkbox-item"><input type="checkbox" value="--open"> --open Ports ouverts</label>
+        <label class="checkbox-item"><input type="checkbox" value="-oN output.txt"> -oN Sortie fichier</label>
+        <label class="checkbox-item"><input type="checkbox" value="-oX output.xml"> -oX XML output</label>
+      </div>
+    </div>
+    <div class="builder-output">
+      <span id="nmap-output">nmap -sS 192.168.1.1</span>
+      <button class="builder-copy-btn" id="nmap-copy">⎘ Copier</button>
+    </div>
+  </div>
+
+  <!-- CHEATSHEET PRINCIPAL -->
+  <h2 class="section-h">📋 Cheatsheet complet</h2>
+
+  <h3 class="sub-h">Scans de base</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Scans essentiels</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Scan de base (1000 ports TCP)</span>
+nmap <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scan SYN stealth (root) — le plus courant</span>
+nmap <span class="cmd-flag">-sS</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scan de tout le sous-réseau</span>
+nmap <span class="cmd-flag">-sn</span> <span class="cmd-value">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Scan des 65535 ports</span>
+nmap <span class="cmd-flag">-p-</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scan rapide avec version + OS</span>
+nmap <span class="cmd-flag">-sS -sV -O -T4</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Full agressif</span>
+nmap <span class="cmd-flag">-A -T4 -p-</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Sans résolution DNS (plus rapide)</span>
+nmap <span class="cmd-flag">-n -Pn</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scan de plusieurs cibles</span>
+nmap <span class="cmd-value">192.168.1.1 192.168.1.2 192.168.1.5</span>
+nmap <span class="cmd-value">192.168.1.1-50</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Détection de services et OS</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Version & OS</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Détection de version de service</span>
+nmap <span class="cmd-flag">-sV</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Intensité de détection (0-9)</span>
+nmap <span class="cmd-flag">-sV --version-intensity 9</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Détection d'OS</span>
+nmap <span class="cmd-flag">-O</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Forcer la détection OS</span>
+nmap <span class="cmd-flag">-O --osscan-guess</span> <span class="cmd-value">192.168.1.1</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Scripts NSE (Nmap Scripting Engine)</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">NSE Scripts</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Scripts par défaut</span>
+nmap <span class="cmd-flag">-sC</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scripts par catégorie</span>
+nmap <span class="cmd-flag">--script=vuln</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=auth</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=discovery</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=safe</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=exploit</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Scripts HTTP</span>
+nmap <span class="cmd-flag">--script=http-title,http-headers,http-methods</span> <span class="cmd-flag">-p 80,443</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=http-enum</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Brute force via scripts</span>
+nmap <span class="cmd-flag">--script=ssh-brute</span> <span class="cmd-flag">-p 22</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">--script=ftp-brute</span> <span class="cmd-flag">-p 21</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Vulnérabilités EternalBlue (MS17-010)</span>
+nmap <span class="cmd-flag">--script=smb-vuln-ms17-010</span> <span class="cmd-flag">-p 445</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Enumération SMB</span>
+nmap <span class="cmd-flag">--script=smb-enum-shares,smb-enum-users</span> <span class="cmd-flag">-p 445</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Lister les scripts disponibles</span>
+ls /usr/share/nmap/scripts/ | grep ssh</code></pre>
+  </div>
+
+  <h3 class="sub-h">Évasion de firewall & IDS</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Firewall Evasion</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Fragmentation des paquets</span>
+nmap <span class="cmd-flag">-f</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Leurres (decoys) pour masquer l'IP réelle</span>
+nmap <span class="cmd-flag">-D RND:10</span> <span class="cmd-value">192.168.1.1</span>
+nmap <span class="cmd-flag">-D 10.0.0.1,10.0.0.2,ME</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Source port spoofing</span>
+nmap <span class="cmd-flag">--source-port 53</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Délai entre paquets</span>
+nmap <span class="cmd-flag">--scan-delay 1s</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Via proxy SOCKS</span>
+nmap <span class="cmd-flag">--proxies socks4://127.0.0.1:9050</span> <span class="cmd-value">192.168.1.1</span>
+
+<span class="cmd-comment"># Taille de MTU personnalisée</span>
+nmap <span class="cmd-flag">--mtu 24</span> <span class="cmd-value">192.168.1.1</span></code></pre>
+  </div>
+
+  <h3 class="sub-h">Sortie et rapports</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Output formats</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment"># Normal text</span>
+nmap <span class="cmd-flag">-oN</span> <span class="cmd-value">scan.txt</span> 192.168.1.1
+
+<span class="cmd-comment"># XML (pour Metasploit, etc.)</span>
+nmap <span class="cmd-flag">-oX</span> <span class="cmd-value">scan.xml</span> 192.168.1.1
+
+<span class="cmd-comment"># Grepable format</span>
+nmap <span class="cmd-flag">-oG</span> <span class="cmd-value">scan.gnmap</span> 192.168.1.1
+
+<span class="cmd-comment"># Tous les formats en même temps</span>
+nmap <span class="cmd-flag">-oA</span> <span class="cmd-value">scan_results</span> 192.168.1.1
+
+<span class="cmd-comment"># Reprendre un scan interrompu</span>
+nmap <span class="cmd-flag">--resume</span> <span class="cmd-value">scan.gnmap</span></code></pre>
+  </div>
+
+  <!-- PORTS RÉFÉRENCE -->
+  <h2 class="section-h">🔌 Ports courants à connaître</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">Référence ports</span><button class="code-block-copy">⎘ Copier</button></div>
+    <pre><code><span class="cmd-comment">PORT    SERVICE         NOTES</span>
+<span class="cmd-success">21</span>      FTP             Transfert fichiers (souvent anonymous login)
+<span class="cmd-success">22</span>      SSH             Shell sécurisé — brute force possible
+<span class="cmd-success">23</span>      Telnet          Non chiffré — credentials en clair
+<span class="cmd-success">25</span>      SMTP            Email — user enumeration possible
+<span class="cmd-success">53</span>      DNS             Zone transfer, enum sous-domaines
+<span class="cmd-success">80</span>      HTTP            Web — LFI, RFI, SQLi, XSS
+<span class="cmd-success">110</span>     POP3            Email
+<span class="cmd-success">135</span>     MSRPC           Windows RPC
+<span class="cmd-success">139/445</span> SMB/NetBIOS     Shares, EternalBlue, Pass-the-Hash
+<span class="cmd-success">143</span>     IMAP            Email
+<span class="cmd-success">389</span>     LDAP            Directory — enum users/groups
+<span class="cmd-success">443</span>     HTTPS           Web chiffré
+<span class="cmd-success">1433</span>    MSSQL           Base de données Microsoft
+<span class="cmd-success">1521</span>    Oracle DB       Base de données Oracle
+<span class="cmd-success">3306</span>    MySQL           Base de données MySQL
+<span class="cmd-success">3389</span>    RDP             Remote Desktop Windows
+<span class="cmd-success">5432</span>    PostgreSQL      Base de données PostgreSQL
+<span class="cmd-success">5900</span>    VNC             Remote Desktop (souvent sans auth)
+<span class="cmd-success">6379</span>    Redis           Souvent sans auth — RCE possible
+<span class="cmd-success">8080</span>    HTTP Alt        Proxy, Tomcat, Jenkins
+<span class="cmd-success">8443</span>    HTTPS Alt       Panels admin
+<span class="cmd-success">27017</span>   MongoDB         Souvent sans auth</code></pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-box-icon">💡</span>
+    <div class="info-box-text"><strong>Astuce :</strong> Combinez Nmap avec Metasploit en important le rapport XML : <code>db_import scan.xml</code> dans msfconsole, puis <code>hosts</code> et <code>services</code> pour visualiser les résultats.</div>
+  </div>
+
+</div>
+
+<footer class="footer"><span>[PenTest Hub]</span> — Usage légal uniquement | © Steveny</footer>
+<div id="toast" class="toast"></div>
+<script src="../js/main.js"></script>
+</body>
+</html>
