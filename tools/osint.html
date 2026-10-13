@@ -39,6 +39,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — OSINT</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">Domaine cible :</span>
+      <input type="text" class="qa-target-input" placeholder="target.com">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🌾" data-cmd="theHarvester -d {TARGET} -b google -l 200">
+        <span class="qa-btn-icon">🌾</span> theHarvester Google
+      </button>
+      <button class="qa-btn" data-icon="🔍" data-cmd="theHarvester -d {TARGET} -b all -l 200 -f rapport">
+        <span class="qa-btn-icon">🔍</span> theHarvester All sources
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="amass enum -passive -d {TARGET}">
+        <span class="qa-btn-icon">🌐</span> Amass passif
+      </button>
+      <button class="qa-btn" data-icon="📋" data-cmd="host -t A {TARGET} && host -t MX {TARGET} && host -t NS {TARGET}">
+        <span class="qa-btn-icon">📋</span> DNS records
+      </button>
+      <button class="qa-btn" data-icon="🕵️" data-cmd="whois {TARGET}">
+        <span class="qa-btn-icon">🕵️</span> WHOIS
+      </button>
+      <button class="qa-btn" data-icon="📧" data-cmd="theHarvester -d {TARGET} -b linkedin,google -l 100">
+        <span class="qa-btn-icon">📧</span> Enum emails/LinkedIn
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <!-- THEHARVESTER -->
   <h2 class="section-h">🌾 theHarvester</h2>
   <div class="info-box tip">

@@ -39,6 +39,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — Nmap</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">Cible :</span>
+      <input type="text" class="qa-target-input" placeholder="192.168.1.1 ou 192.168.1.0/24">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔍" data-cmd="nmap -sS -T4 {TARGET}">
+        <span class="qa-btn-icon">🔍</span> Scan rapide
+      </button>
+      <button class="qa-btn" data-icon="🎯" data-cmd="nmap -sS -sV -sC -O -T4 -p- {TARGET}">
+        <span class="qa-btn-icon">🎯</span> Scan complet
+      </button>
+      <button class="qa-btn" data-icon="🔬" data-cmd="nmap -sV --version-intensity 5 {TARGET}">
+        <span class="qa-btn-icon">🔬</span> Versions services
+      </button>
+      <button class="qa-btn" data-icon="🛡️" data-cmd="nmap --script vuln {TARGET}">
+        <span class="qa-btn-icon">🛡️</span> Scan vulnérabilités
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="nmap -sn {TARGET}/24">
+        <span class="qa-btn-icon">🌐</span> Découverte réseau
+      </button>
+      <button class="qa-btn" data-icon="🚪" data-cmd="nmap -sS -p 22,80,443,445,3389,8080 {TARGET}">
+        <span class="qa-btn-icon">🚪</span> Ports communs
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <div class="info-box warning">
     <span class="info-box-icon">⚠️</span>
     <div class="info-box-text">Utilisez Nmap uniquement sur des réseaux et systèmes dont vous êtes propriétaire ou pour lesquels vous disposez d'une autorisation écrite. Les scans non autorisés sont illégaux.</div>

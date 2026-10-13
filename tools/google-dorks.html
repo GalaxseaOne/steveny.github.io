@@ -44,6 +44,43 @@
     <div class="info-box-text">Les Google Dorks exploitent les opérateurs de recherche avancés de Google pour trouver des informations publiquement accessibles. Tout ce qui est indexé est légalement accessible en lecture.</div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — Google Dorks</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">Site cible :</span>
+      <input type="text" class="qa-target-input" placeholder="target.com">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔐" data-cmd="site:{TARGET} inurl:admin OR inurl:login OR inurl:wp-admin">
+        <span class="qa-btn-icon">🔐</span> Panneaux admin
+      </button>
+      <button class="qa-btn" data-icon="📄" data-cmd="site:{TARGET} ext:pdf OR ext:doc OR ext:xls OR ext:sql">
+        <span class="qa-btn-icon">📄</span> Fichiers sensibles
+      </button>
+      <button class="qa-btn" data-icon="⚙️" data-cmd="site:{TARGET} inurl:config OR inurl:.env OR inurl:.git">
+        <span class="qa-btn-icon">⚙️</span> Config exposée
+      </button>
+      <button class="qa-btn" data-icon="🗄️" data-cmd="site:{TARGET} intext:'sql syntax' OR intext:'mysql error' OR intext:'ORA-'">
+        <span class="qa-btn-icon">🗄️</span> Erreurs SQL
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="site:{TARGET} -www">
+        <span class="qa-btn-icon">🌐</span> Sous-domaines
+      </button>
+      <button class="qa-btn" data-icon="🔑" data-cmd="site:{TARGET} intext:'password' OR intext:'passwd' filetype:txt">
+        <span class="qa-btn-icon">🔑</span> Mots de passe
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Dork :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <!-- GÉNÉRATEUR -->
   <h2 class="section-h">⚙️ Générateur de Dork</h2>
   <div class="builder-form" id="dorksBuilder">

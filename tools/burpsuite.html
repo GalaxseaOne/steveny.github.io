@@ -38,6 +38,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — Burp Suite</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">URL cible :</span>
+      <input type="text" class="qa-target-input" placeholder="http://target.com">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔥" data-cmd="burpsuite &amp;">
+        <span class="qa-btn-icon">🔥</span> Lancer Burp Suite
+      </button>
+      <button class="qa-btn" data-icon="🕷️" data-cmd="# Burp Suite > Target > Scope > Add URL: {TARGET}&#10;# Puis: Target > Site map > Spider this host">
+        <span class="qa-btn-icon">🕷️</span> Spider la cible
+      </button>
+      <button class="qa-btn" data-icon="🔍" data-cmd="# Burp Suite > Scanner > New scan&#10;# URL: {TARGET}&#10;# Scan type: Active scan (full)">
+        <span class="qa-btn-icon">🔍</span> Active scan
+      </button>
+      <button class="qa-btn" data-icon="🔄" data-cmd="# Intercepter : Proxy > Intercept ON&#10;# Naviguer vers: {TARGET}&#10;# Forward/Drop pour analyser">
+        <span class="qa-btn-icon">🔄</span> Intercept mode
+      </button>
+      <button class="qa-btn" data-icon="💥" data-cmd="# Intruder > Positions > Highlight param&#10;# Payload type: Simple list&#10;# Wordlist: /usr/share/wordlists/rockyou.txt">
+        <span class="qa-btn-icon">💥</span> Config Intruder
+      </button>
+      <button class="qa-btn" data-icon="🎛️" data-cmd="# Proxy settings: 127.0.0.1:8080&#10;# Import CA: http://burpsuite/cert&#10;# Target: {TARGET}">
+        <span class="qa-btn-icon">🎛️</span> Config proxy
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <h2 class="section-h">⚙️ Configuration initiale</h2>
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-title">Setup Burp Suite</span><button class="code-block-copy">⎘ Copier</button></div>
