@@ -38,6 +38,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — Web Crawling</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">URL / Domaine :</span>
+      <input type="text" class="qa-target-input" placeholder="http://target.com">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔫" data-cmd="gobuster dir -u {TARGET} -w /usr/share/wordlists/dirb/common.txt -t 50">
+        <span class="qa-btn-icon">🔫</span> Gobuster dirs
+      </button>
+      <button class="qa-btn" data-icon="📄" data-cmd="gobuster dir -u {TARGET} -w /usr/share/wordlists/dirb/common.txt -x php,html,txt,bak -t 50">
+        <span class="qa-btn-icon">📄</span> Gobuster + extensions
+      </button>
+      <button class="qa-btn" data-icon="🚀" data-cmd="feroxbuster -u {TARGET} -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -x php,html,js">
+        <span class="qa-btn-icon">🚀</span> Feroxbuster récursif
+      </button>
+      <button class="qa-btn" data-icon="⚡" data-cmd="ffuf -u {TARGET}/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -mc 200,301,302,403">
+        <span class="qa-btn-icon">⚡</span> ffuf rapide
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="gobuster dns -d {TARGET} -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt">
+        <span class="qa-btn-icon">🌐</span> Sous-domaines DNS
+      </button>
+      <button class="qa-btn" data-icon="📋" data-cmd="ffuf -u {TARGET}/FUZZ -w /usr/share/seclists/Discovery/Web-Content/quickhits.txt -mc 200,301,302">
+        <span class="qa-btn-icon">📋</span> Fichiers sensibles
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <!-- GOBUSTER -->
   <h2 class="section-h">🔫 Gobuster</h2>
   <div class="code-block">

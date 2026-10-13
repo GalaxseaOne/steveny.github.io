@@ -85,7 +85,55 @@ document.addEventListener('DOMContentLoaded', () => {
   initDorksBuilder();
   initSqlmapBuilder();
   initHarvesterBuilder();
+  initQuickActions();
 });
+
+/* === QUICK ACTIONS === */
+function initQuickActions() {
+  const panel = document.querySelector('.quick-actions');
+  if (!panel) return;
+
+  const targetInput = panel.querySelector('.qa-target-input');
+  const resultRow = panel.querySelector('.qa-result-row');
+  const resultCmd = panel.querySelector('.qa-result-cmd');
+  const copyResultBtn = panel.querySelector('.qa-copy-result');
+
+  function getTarget() {
+    return (targetInput && targetInput.value.trim()) || targetInput?.placeholder || '<cible>';
+  }
+
+  panel.querySelectorAll('.qa-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tpl = btn.dataset.cmd;
+      if (!tpl) return;
+      const target = getTarget();
+      const cmd = tpl.replace(/\{TARGET\}/g, target);
+
+      if (resultRow && resultCmd) {
+        resultCmd.textContent = cmd;
+        resultRow.classList.add('visible');
+      }
+
+      navigator.clipboard.writeText(cmd).then(() => {
+        showToast('Commande copiée ✓');
+        btn.classList.add('copied');
+        const orig = btn.innerHTML;
+        const icon = btn.querySelector('.qa-btn-icon');
+        if (icon) icon.textContent = '✓';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          if (icon) icon.textContent = btn.dataset.icon || '⚡';
+        }, 1800);
+      });
+    });
+  });
+
+  if (copyResultBtn && resultCmd) {
+    copyResultBtn.addEventListener('click', () => {
+      copyText(resultCmd.textContent);
+    });
+  }
+}
 
 /* === NMAP BUILDER === */
 function initNmapBuilder() {

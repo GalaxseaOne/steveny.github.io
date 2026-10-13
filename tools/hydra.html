@@ -38,6 +38,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — Hydra</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">IP cible :</span>
+      <input type="text" class="qa-target-input" placeholder="192.168.1.1">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="🔑" data-cmd="hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://{TARGET}">
+        <span class="qa-btn-icon">🔑</span> Brute SSH
+      </button>
+      <button class="qa-btn" data-icon="📂" data-cmd="hydra -l admin -P /usr/share/wordlists/rockyou.txt ftp://{TARGET}">
+        <span class="qa-btn-icon">📂</span> Brute FTP
+      </button>
+      <button class="qa-btn" data-icon="🖥️" data-cmd="hydra -l administrator -P /usr/share/wordlists/rockyou.txt rdp://{TARGET}">
+        <span class="qa-btn-icon">🖥️</span> Brute RDP
+      </button>
+      <button class="qa-btn" data-icon="🗄️" data-cmd="hydra -l root -P /usr/share/wordlists/rockyou.txt mysql://{TARGET}">
+        <span class="qa-btn-icon">🗄️</span> Brute MySQL
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="hydra -l admin -P /usr/share/wordlists/rockyou.txt {TARGET} http-post-form '/login:username=^USER^&password=^PASS^:F=Invalid'">
+        <span class="qa-btn-icon">🌐</span> Brute HTTP Form
+      </button>
+      <button class="qa-btn" data-icon="🐢" data-cmd="hydra -l admin -P /usr/share/wordlists/rockyou.txt -t 2 -w 30 ssh://{TARGET}">
+        <span class="qa-btn-icon">🐢</span> Lent (anti-lockout)
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <h2 class="section-h">📦 Installation</h2>
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-title">Installation</span><button class="code-block-copy">⎘ Copier</button></div>

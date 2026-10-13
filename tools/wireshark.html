@@ -39,6 +39,43 @@
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="quick-actions-header">
+      <span class="qa-icon">⚡</span>
+      <h3>Actions rapides — tshark</h3>
+    </div>
+    <div class="qa-target-row">
+      <span class="qa-target-label">Interface :</span>
+      <input type="text" class="qa-target-input" placeholder="eth0">
+    </div>
+    <div class="qa-buttons">
+      <button class="qa-btn" data-icon="📡" data-cmd="tshark -i {TARGET}">
+        <span class="qa-btn-icon">📡</span> Capture réseau
+      </button>
+      <button class="qa-btn" data-icon="🌐" data-cmd="tshark -i {TARGET} -Y 'http'">
+        <span class="qa-btn-icon">🌐</span> Filtrer HTTP
+      </button>
+      <button class="qa-btn" data-icon="🔑" data-cmd="tshark -i {TARGET} -Y 'http.request.method == POST'">
+        <span class="qa-btn-icon">🔑</span> Requêtes POST
+      </button>
+      <button class="qa-btn" data-icon="📋" data-cmd="tshark -i {TARGET} -Y 'dns' -T fields -e dns.qry.name">
+        <span class="qa-btn-icon">📋</span> Requêtes DNS
+      </button>
+      <button class="qa-btn" data-icon="💾" data-cmd="tshark -i {TARGET} -w capture.pcap">
+        <span class="qa-btn-icon">💾</span> Sauvegarder PCAP
+      </button>
+      <button class="qa-btn" data-icon="🔐" data-cmd="tshark -r capture.pcap -Y 'tcp.port == 443' -T fields -e ip.src -e ip.dst">
+        <span class="qa-btn-icon">🔐</span> Analyser PCAP
+      </button>
+    </div>
+    <div class="qa-result-row">
+      <span class="qa-result-label">Cmd :</span>
+      <div class="qa-result-cmd"></div>
+      <button class="qa-copy-result">⎘ Copier</button>
+    </div>
+  </div>
+
   <div class="info-box warning">
     <span class="info-box-icon">⚠️</span>
     <div class="info-box-text">Capturez uniquement le trafic sur des réseaux dont vous êtes propriétaire ou autorisé à analyser. L'interception non autorisée est illégale.</div>
